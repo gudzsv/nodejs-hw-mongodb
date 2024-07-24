@@ -21,6 +21,12 @@ export const setupServer = () => {
     res.status(200).json({ data: 'students' });
   });
 
+  app.use((req, res, next) => {
+    res.status(404).json({
+      message: 'Not found',
+    });
+  });
+
   app.listen(PORT, () => {
     console.log(`Server is running on PORT: ${PORT}`);
   });
