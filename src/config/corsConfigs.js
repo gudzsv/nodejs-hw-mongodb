@@ -1,4 +1,4 @@
-const whitelist = ['http://example1.com', 'http://example2.com'];
+const whitelist = ['*'];
 export const corsConfigs = (req, callback) => {
   let corsOptions = {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
