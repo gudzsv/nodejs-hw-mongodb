@@ -5,7 +5,7 @@ import { env } from './utils/env.js';
 import { ENV_VARS } from './constants/index.js';
 import { corsConfigs } from './config/corsConfigs.js';
 import { pinoConfigs } from './config/pinoConfigs.js';
-import router from './routers/contacts.js';
+import contactsRouter from './routers/contacts.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
@@ -18,9 +18,9 @@ export const setupServer = () => {
 
   app.use(cors(corsConfigs));
 
-  // app.use(pino(pinoConfigs));
+  app.use(pino(pinoConfigs));
 
-  app.use(router);
+  app.use(contactsRouter);
 
   app.use('*', notFoundHandler);
 

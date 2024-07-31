@@ -3,11 +3,15 @@ import {
   getContactByIdController,
   getContactsController,
 } from '../controllers/contacts.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
-const router = Router();
+const contactsRouter = Router();
 
-router.get('/contacts', getContactsController);
+contactsRouter.get('/contacts', ctrlWrapper(getContactsController));
 
-router.get('/contacts/:contactId', getContactByIdController);
+contactsRouter.get(
+  '/contacts/:contactId',
+  ctrlWrapper(getContactByIdController),
+);
 
-export default router;
+export default contactsRouter;
