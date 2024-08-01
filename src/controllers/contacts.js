@@ -1,9 +1,14 @@
 import createHttpError from 'http-errors';
 import { HTTP_STATUSES } from '../constants/index.js';
-import { getAllContacts, getContactById } from '../services/contacts.js';
+import {
+  createContact,
+  getAllContacts,
+  getContactById,
+} from '../services/contacts.js';
 
 const STATUS_OK = HTTP_STATUSES.OK;
 const STATUS_NOT_FOUND = HTTP_STATUSES.NOT_FOUND;
+const STATUS_CREATED = HTTP_STATUSES.CREATED;
 
 export const getContactsController = async (req, res) => {
   const data = await getAllContacts();
@@ -26,6 +31,16 @@ export const getContactByIdController = async (req, res, next) => {
   res.status(STATUS_OK).json({
     status: STATUS_OK,
     message: `Successfully found contact with id ${contactId}!`,
+    data: contact,
+  });
+};
+
+export const createContactController = async (req, res) => {
+  const contact = await createContact(rq.body);
+
+  res.status(STATUS_CREATED).json({
+    status: STATUS_CREATED,
+    message: 'Successfully created a contact!',
     data: contact,
   });
 };
