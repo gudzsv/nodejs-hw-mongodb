@@ -2,6 +2,7 @@ import createHttpError from 'http-errors';
 import { HTTP_STATUSES } from '../constants/index.js';
 import {
   createContact,
+  deleteContact,
   getAllContacts,
   getContactById,
   updateContact,
@@ -9,6 +10,7 @@ import {
 
 const STATUS_OK = HTTP_STATUSES.OK;
 const STATUS_CREATED = HTTP_STATUSES.CREATED;
+const STATUS_NO_CONTENT = HTTP_STATUSES.NO_CONTENT;
 
 export const getContactsController = async (req, res) => {
   const data = await getAllContacts();
@@ -61,4 +63,16 @@ export const upsertUserController = async (req, res) => {
     message: 'Successfully patched a contact!',
     data: result.contact,
   });
+};
+
+export const deleteContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+
+  const contact = await deleteContact(contactId);
+
+  if (!contact) {
+    return next(createHttpError.NotFound('Contact not found'));
+  }
+
+  res.status(STATUS_NO_CONTENT).send();
 };
