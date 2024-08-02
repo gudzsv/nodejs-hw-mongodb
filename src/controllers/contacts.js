@@ -4,10 +4,10 @@ import {
   createContact,
   getAllContacts,
   getContactById,
+  updateContact,
 } from '../services/contacts.js';
 
 const STATUS_OK = HTTP_STATUSES.OK;
-const STATUS_NOT_FOUND = HTTP_STATUSES.NOT_FOUND;
 const STATUS_CREATED = HTTP_STATUSES.CREATED;
 
 export const getContactsController = async (req, res) => {
@@ -36,11 +36,29 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
-  const contact = await createContact(rq.body);
+  const contact = await createContact(req.body);
 
   res.status(STATUS_CREATED).json({
     status: STATUS_CREATED,
     message: 'Successfully created a contact!',
     data: contact,
+  });
+};
+
+export const upsertUserController = async (req, res) => {
+  const { contactId } = req.params;
+
+  const result = await updateContact(contactId, req.body);
+
+  if (!result) {
+    return next(createHttpError.NotFound('Contact not found'));
+  }
+
+  const status = result?.isNew ? STATUS_CREATED : STATUS_OK;
+
+  res.status(status).json({
+    status: status,
+    message: 'Successfully patched a contact!',
+    data: result.contact,
   });
 };
