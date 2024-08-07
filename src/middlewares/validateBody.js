@@ -6,11 +6,17 @@ export const validateBody = (schema) => async (req, res, next) => {
     await schema.validateAsync(req.body, { abortEarly: false });
     next();
   } catch (error) {
+    const errorMessages = error.details
+      .map((err) => {
+        return err.message.replace(/"/g, '');
+      })
+      .join(', ');
+    console.log('===>error: ', errorMessages);
     const err = createHttpError(
       HTTP_STATUSES.BAD_REQUEST,
-      'Bad request, body params is incorrect',
+      'Bad request, body parameters are incorrect',
       {
-        errors: error.details,
+        errors: errorMessages.replace(/\\/g, ''),
       },
     );
     next(err);

@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { JOI_VALIDATION_MSG, VALIDATION_LENGTH } from '../constants/index.js';
 
-const { MIN, MAX, ONE_OF, REQUIRED, STRING, BOOLEAN, PHONE_NUMBER } =
+const { MIN, MAX, ONE_OF, REQUIRED, STRING, BOOLEAN, PHONE_NUMBER, EMAIL } =
   JOI_VALIDATION_MSG;
 
 const { MIN_LENGTH, MAX_LENGTH } = VALIDATION_LENGTH;
@@ -37,7 +37,9 @@ export const createContactSchema = Joi.object({
       'string.max': MAX,
       'string.email': EMAIL,
     }),
-  isFavorite: Joi.boolean().default(false).message({ 'boolean.base': BOOLEAN }),
+  isFavorite: Joi.boolean()
+    .default(false)
+    .messages({ 'boolean.base': BOOLEAN }),
   contactType: Joi.string()
     .valid('work', 'home', 'personal')
     .default('personal')
