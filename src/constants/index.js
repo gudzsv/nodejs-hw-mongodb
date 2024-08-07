@@ -18,3 +18,22 @@ export const HTTP_STATUSES = {
   TOO_MANY_REQUESTS: 429,
   INTERNAL_SERVER_ERROR: 500,
 };
+
+export const JOI_VALIDATION_MSG = {
+  MIN: '{{#label}} must be at least {{#limit}}. You provided: {{.}}',
+  MAX: '{{#label}} must be less than or equal to {{#limit}}. You provided: {{.}}',
+  ONE_OF:
+    '{{#label}} must be one of the following values: {{#valids}}. You provided: {{.}}',
+  REQUIRED: '{{#label}} is a required field',
+  STRING: '{{#label}} must be a string. You provided: {{.}}',
+  NUMBER: '{{#label}} must be a number. You provided: {{.}}',
+  INTEGER: '{{#label}} must be an integer. You provided: {{.}}',
+  BOOLEAN: '{{#label}} must be a boolean value. You provided: {{.}}',
+  PHONE_NUMBER: '{{#label}} must be a valid phone number. You provided: {{.}}',
+  EMAIL: '{{#label}} must be a valid email address. You provided: {{.}}',
+};
+
+export const VALIDATION_LENGTH = {
+  MIN_LENGTH: 3,
+  MAX_LENGTH: 20,
+};
