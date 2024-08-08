@@ -36,3 +36,13 @@ export const VALIDATION_LENGTH = {
   MIN_LENGTH: 3,
   MAX_LENGTH: 20,
 };
+
+export const DEFAULT_PAGINATION_DATA = {
+  PAGE: 1,
+  PER_PAGE: 10,
+};
+
+export const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
