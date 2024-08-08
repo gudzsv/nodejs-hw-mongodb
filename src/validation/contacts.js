@@ -30,7 +30,6 @@ export const createContactSchema = Joi.object({
     .min(MIN_LENGTH)
     .max(MAX_LENGTH)
     .email({ tlds: { allow: false } })
-    .required()
     .messages({
       'string.base': STRING,
       'string.min': MIN,
