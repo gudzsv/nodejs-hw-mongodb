@@ -6,7 +6,7 @@ const { MIN, MAX, ONE_OF, REQUIRED, STRING, BOOLEAN, PHONE_NUMBER, EMAIL } =
 
 const { MIN_LENGTH, MAX_LENGTH } = VALIDATION_LENGTH;
 
-const phoneNumberPattern = /^\+?[1-9]\d{1,14}$/;
+const phoneNumberPattern = /^\+?\d[\d-]*\d$/;
 
 export const createContactSchema = Joi.object({
   name: Joi.string().min(MIN_LENGTH).max(MAX_LENGTH).required().messages({
@@ -46,7 +46,7 @@ export const createContactSchema = Joi.object({
     .required()
     .messages({
       'string.base': STRING,
-      'string.valid': ONE_OF,
+      'any.only': ONE_OF,
       'any.required': REQUIRED,
     }),
 });

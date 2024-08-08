@@ -20,17 +20,16 @@ export const HTTP_STATUSES = {
 };
 
 export const JOI_VALIDATION_MSG = {
-  MIN: '{{#label}} must be at least {{#limit}}. You provided: {{.}}',
-  MAX: '{{#label}} must be less than or equal to {{#limit}}. You provided: {{.}}',
-  ONE_OF:
-    '{{#label}} must be one of the following values: {{#valids}}. You provided: {{.}}',
-  REQUIRED: '{{#label}} is a required field',
-  STRING: '{{#label}} must be a string. You provided: {{.}}',
-  NUMBER: '{{#label}} must be a number. You provided: {{.}}',
-  INTEGER: '{{#label}} must be an integer. You provided: {{.}}',
-  BOOLEAN: '{{#label}} must be a boolean value. You provided: {{.}}',
-  PHONE_NUMBER: '{{#label}} must be a valid phone number. You provided: {{.}}',
-  EMAIL: '{{#label}} must be a valid email address. You provided: {{.}}',
+  MIN: `'{{#label}}' must be at least '{{#limit}}'. You provided: '{{#value}}'`,
+  MAX: `'{{#label}}' must be less than or equal to '{{#limit}}'. You provided: '{{#value}}'`,
+  ONE_OF: `'{{#label}}' must be one of the following values: '{{#valids}}'. You provided: '{{#value}}'`,
+  REQUIRED: `'{{#label}}' is a required field`,
+  STRING: `'{{#label}} must be a string. You provided: '{{#value}}'`,
+  NUMBER: `'{{#label}}' must be a number. You provided: '{{#value}}'`,
+  INTEGER: `'{{#label}}' must be an integer. You provided: '{{#value}}'`,
+  BOOLEAN: `'{{#label}}' must be a boolean value. You provided: '{{#value}}'`,
+  PHONE_NUMBER: `'{{#label}}' must be a valid phone number. You provided: '{{#value}}'`,
+  EMAIL: `'{{#label}}' must be a valid email address. You provided: '{{#value}}'`,
 };
 
 export const VALIDATION_LENGTH = {
