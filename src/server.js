@@ -14,13 +14,11 @@ const PORT = Number(env(ENV_VARS.PORT, 3000));
 export const setupServer = () => {
   const app = express();
 
-  app.use(express.json());
-
   app.use(cors(corsConfigs));
 
   app.use(pino(pinoConfigs));
 
-  app.use(contactsRouter);
+  app.use('/contacts', contactsRouter);
 
   app.use('*', notFoundHandler);
 

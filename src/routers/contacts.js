@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { json, Router } from 'express';
 import {
   createContactController,
   deleteContactController,
@@ -9,30 +9,37 @@ import {
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { createContactSchema } from '../validation/contacts.js';
+import { isValidId } from '../middlewares/isValidId.js';
 
 const contactsRouter = Router();
+const jsonParser = json();
 
-contactsRouter.get('/contacts', ctrlWrapper(getContactsController));
+contactsRouter.get('/', ctrlWrapper(getContactsController));
 
 contactsRouter.get(
-  '/contacts/:contactId',
+  '/:contactId',
+  isValidId('contactId'),
   ctrlWrapper(getContactByIdController),
 );
 
 contactsRouter.post(
-  '/contacts',
+  '/',
+  jsonParser,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
 contactsRouter.patch(
-  '/contacts/:contactId',
+  '/:contactId',
+  isValidId('contactId'),
+  jsonParser,
   validateBody(createContactSchema),
   ctrlWrapper(upsertUserController),
 );
 
 contactsRouter.delete(
-  '/contacts/:contactId',
+  '/:contactId',
+  isValidId('contactId'),
   ctrlWrapper(deleteContactController),
 );
 
