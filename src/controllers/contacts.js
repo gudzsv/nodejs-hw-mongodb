@@ -7,16 +7,16 @@ import {
   getContactById,
   updateContact,
 } from '../services/contacts.js';
-import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseAllParams } from '../utils/parseAllParams.js';
 
 const STATUS_OK = HTTP_STATUSES.OK;
 const STATUS_CREATED = HTTP_STATUSES.CREATED;
 const STATUS_NO_CONTENT = HTTP_STATUSES.NO_CONTENT;
 
 export const getContactsController = async (req, res) => {
-  const { page, perPage } = parsePaginationParams(req.query);
+  const params = parseAllParams(req.query);
 
-  const contacts = await getAllContacts({ page, perPage });
+  const contacts = await getAllContacts(params);
 
   res.status(STATUS_OK).json({
     status: STATUS_OK,
