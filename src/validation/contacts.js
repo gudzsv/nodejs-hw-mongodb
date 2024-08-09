@@ -49,3 +49,40 @@ export const createContactSchema = Joi.object({
       'any.required': REQUIRED,
     }),
 });
+
+export const updateContactSchema = Joi.object({
+  name: Joi.string().min(MIN_LENGTH).max(MAX_LENGTH).messages({
+    'string.min': MIN,
+    'string.max': MAX,
+  }),
+  phoneNumber: Joi.string()
+    .min(MIN_LENGTH)
+    .max(MAX_LENGTH)
+    .pattern(phoneNumberPattern)
+    .messages({
+      'string.base': STRING,
+      'string.min': MIN,
+      'string.max': MAX,
+      'string.pattern.base': PHONE_NUMBER,
+    }),
+  email: Joi.string()
+    .min(MIN_LENGTH)
+    .max(MAX_LENGTH)
+    .email({ tlds: { allow: false } })
+    .messages({
+      'string.base': STRING,
+      'string.min': MIN,
+      'string.max': MAX,
+      'string.email': EMAIL,
+    }),
+  isFavorite: Joi.boolean()
+    .default(false)
+    .messages({ 'boolean.base': BOOLEAN }),
+  contactType: Joi.string()
+    .valid('work', 'home', 'personal')
+    .default('personal')
+    .messages({
+      'string.base': STRING,
+      'any.only': ONE_OF,
+    }),
+});

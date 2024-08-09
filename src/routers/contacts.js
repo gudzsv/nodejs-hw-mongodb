@@ -8,7 +8,10 @@ import {
 } from '../controllers/contacts.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { createContactSchema } from '../validation/contacts.js';
+import {
+  createContactSchema,
+  updateContactSchema,
+} from '../validation/contacts.js';
 import { isValidId } from '../middlewares/isValidId.js';
 
 const contactsRouter = Router();
@@ -33,7 +36,7 @@ contactsRouter.patch(
   '/:contactId',
   isValidId('contactId'),
   jsonParser,
-  validateBody(createContactSchema),
+  validateBody(updateContactSchema),
   ctrlWrapper(upsertUserController),
 );
 
