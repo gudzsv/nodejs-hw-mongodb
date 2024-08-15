@@ -62,3 +62,8 @@ export const TOKEN_PARAMS = {
   accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
   refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
 };
+
+export const COOKIES = {
+  SESSION_ID: 'sessionId',
+  REFRESH_TOKEN: 'refreshToken',
+};

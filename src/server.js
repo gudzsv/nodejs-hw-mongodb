@@ -16,6 +16,7 @@ export const setupServer = () => {
   const app = express();
 
   app.use(cors(corsConfigs));
+
   app.use(cookieParser());
 
   app.use(pino(pinoConfigs));

@@ -66,4 +66,12 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
   });
 };
 
-export const logoutUser = async (sessionId) => {};
+export const logoutUser = async (sessionId) => {
+  const session = await SessionCollection.findById(sessionId);
+
+  if (!session) {
+    throw createHttpError(NOT_FOUND, 'Session not found');
+  }
+
+  await SessionCollection.deleteOne({ _id: sessionId });
+};

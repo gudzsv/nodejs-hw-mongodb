@@ -1,11 +1,12 @@
-import { HTTP_STATUSES, THIRTY_DAYS } from '../constants/index.js';
+import { COOKIES, HTTP_STATUSES, THIRTY_DAYS } from '../constants/index.js';
 import {
   loginUser,
+  logoutUser,
   refreshUserSession,
   registerUser,
 } from '../services/auth.js';
 
-const { CREATED, OK } = HTTP_STATUSES;
+const { CREATED, OK, NO_CONTENT } = HTTP_STATUSES;
 
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
@@ -63,4 +64,16 @@ export const refreshUserSessionController = async (req, res) => {
     message: 'Successfully refreshed a session!',
     data: { accessToken: session.accessToken },
   });
+};
+
+export const logoutUserController = async (req, res) => {
+  const sessionId = req.cookies.sessionId;
+  if (sessionId) {
+    await logoutUser(sessionId);
+  }
+
+  res.clearCookie(COOKIES.SESSION_ID);
+  res.clearCookie(COOKIES.REFRESH_TOKEN);
+
+  res.status(NO_CONTENT).send();
 };
