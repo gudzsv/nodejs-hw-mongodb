@@ -1,13 +1,9 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
-import { UserCollection } from './../db/models/users.js';
-import {
-  HTTP_STATUSES,
-  RANDOM_BYTES,
-  TOKEN_PARAMS,
-} from '../constants/index.js';
-import { env } from './../utils/env.js';
-import { SessionCollection } from './../db/models/sessions.js';
+import { UserCollection } from '../db/models/users.js';
+import { HTTP_STATUSES, TOKEN_PARAMS } from '../constants/index.js';
+import { env } from '../utils/env.js';
+import { SessionCollection } from '../db/models/sessions.js';
 
 const { CONFLICT, NOT_FOUND, UNAUTHORIZED } = HTTP_STATUSES;
 
@@ -45,6 +41,29 @@ export const loginUser = async (payload) => {
   return await SessionCollection.create({ userId: user._id, ...TOKEN_PARAMS });
 };
 
-export const logoutUser = async (sessionId) => {};
+export const refreshUserSession = async ({ sessionId, refreshToken }) => {
+  const session = await SessionCollection.findOne({
+    _id: sessionId,
+    refreshToken,
+  });
 
-export const refreshSession = async ({ sessionId, refreshToken }) => {};
+  if (!session) {
+    throw createHttpError(NOT_FOUND, 'Session not found');
+  }
+
+  const isSessionTokenExpired =
+    new Date() > new Date(session.refreshTokenValidUntil);
+
+  if (isSessionTokenExpired) {
+    throw createHttpError(UNAUTHORIZED, 'Session token expired');
+  }
+
+  await SessionCollection.deleteOne({ _id: sessionId, refreshToken });
+
+  return await SessionCollection.create({
+    userId: session.userId,
+    ...TOKEN_PARAMS,
+  });
+};
+
+export const logoutUser = async (sessionId) => {};
