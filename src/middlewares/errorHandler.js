@@ -5,13 +5,16 @@ import { MongooseError } from 'mongoose';
 const { INTERNAL_SERVER_ERROR, BAD_REQUEST } = HTTP_STATUSES;
 
 export const errorHandler = (error, req, res, next) => {
+  console.log('error: ', error);
   let ERROR_STATUS;
 
   if (error instanceof SyntaxError && 'body' in error) {
     return res.status(BAD_REQUEST).json({
       status: BAD_REQUEST,
       message: 'Invalid JSON format',
-      data: { message: error.message },
+      data: {
+        message: error.body.replace(/["\r\n\s\\]+/g, ''),
+      },
     });
   }
 
@@ -20,7 +23,7 @@ export const errorHandler = (error, req, res, next) => {
     res.status(ERROR_STATUS).json({
       status: ERROR_STATUS,
       message: error.name,
-      data: { message: error.message },
+      data: { ...error },
     });
     return;
   }

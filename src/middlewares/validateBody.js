@@ -19,6 +19,7 @@ export const validateBody = (schema) => async (req, res, next) => {
       },
     );
 
+    console.log('httpError: ', httpError.errors);
     next(httpError);
   }
 };

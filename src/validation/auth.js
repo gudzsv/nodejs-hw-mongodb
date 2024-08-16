@@ -5,6 +5,7 @@ const { MIN, MAX, STRING, EMAIL } = JOI_VALIDATION_MSG;
 
 export const registerUserSchema = Joi.object({
   name: Joi.string().min(MIN_LENGTH).max(MAX_LENGTH).required().messages({
+    'string.base': STRING,
     'string.min': MIN,
     'string.max': MAX,
   }),
@@ -20,6 +21,7 @@ export const registerUserSchema = Joi.object({
       'string.email': EMAIL,
     }),
   password: Joi.string().min(MIN_LENGTH).max(MAX_LENGTH).required().messages({
+    'string.base': STRING,
     'string.min': MIN,
     'string.max': MAX,
   }),
