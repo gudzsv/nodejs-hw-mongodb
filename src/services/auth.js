@@ -1,17 +1,15 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import { UserCollection } from '../db/models/users.js';
-import { HTTP_STATUSES, TOKEN_PARAMS } from '../constants/index.js';
+import { TOKEN_PARAMS } from '../constants/index.js';
 import { env } from '../utils/env.js';
 import { SessionCollection } from '../db/models/sessions.js';
-
-const { CONFLICT, NOT_FOUND, UNAUTHORIZED } = HTTP_STATUSES;
 
 export const registerUser = async (payload) => {
   const user = await UserCollection.findOne({ email: payload.email });
 
   if (user) {
-    throw createHttpError(CONFLICT, 'Email in use’');
+    throw createHttpError.Conflict('Email in use');
   }
 
   const hashedPassword = await bcrypt.hash(
@@ -27,13 +25,13 @@ export const loginUser = async (payload) => {
   const user = await UserCollection.findOne({ email });
 
   if (!user) {
-    throw createHttpError(NOT_FOUND, 'User not found');
+    throw createHttpError.NotFound('User not found');
   }
 
   const isValidPassword = await bcrypt.compare(password, user.password);
 
   if (!isValidPassword) {
-    throw createHttpError(UNAUTHORIZED, 'User not authorized');
+    throw createHttpError.Unauthorized('User not authorized');
   }
 
   await SessionCollection.deleteOne({ userId: user._id });
@@ -48,14 +46,14 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
   });
 
   if (!session) {
-    throw createHttpError(NOT_FOUND, 'Session not found');
+    throw createHttpError.NotFound('Session not found');
   }
 
   const isSessionTokenExpired =
     new Date() > new Date(session.refreshTokenValidUntil);
 
   if (isSessionTokenExpired) {
-    throw createHttpError(UNAUTHORIZED, 'Session token expired');
+    throw createHttpError.Unauthorized('Session token expired');
   }
 
   await SessionCollection.deleteOne({ _id: sessionId, refreshToken });
@@ -70,7 +68,7 @@ export const logoutUser = async (sessionId) => {
   const session = await SessionCollection.findById(sessionId);
 
   if (!session) {
-    throw createHttpError(NOT_FOUND, 'Session not found');
+    throw createHttpError.NotFound('Session not found');
   }
 
   await SessionCollection.deleteOne({ _id: sessionId });

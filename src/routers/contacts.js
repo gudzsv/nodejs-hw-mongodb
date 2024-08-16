@@ -28,14 +28,16 @@ contactsRouter.get(
 contactsRouter.post(
   '/',
   jsonParser,
+
   validateBody(createContactSchema),
+
   ctrlWrapper(createContactController),
 );
 
 contactsRouter.patch(
   '/:contactId',
-  isValidId('contactId'),
   jsonParser,
+  isValidId('contactId'),
   validateBody(updateContactSchema),
   ctrlWrapper(upsertUserController),
 );

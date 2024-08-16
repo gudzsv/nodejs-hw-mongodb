@@ -34,7 +34,7 @@ export const errorHandler = (error, req, res, next) => {
       data: { message: error.message },
     });
   }
-  ` `;
+
   res.status(ERROR_STATUS).json({
     status: ERROR_STATUS,
     message: 'Something went wrong',
