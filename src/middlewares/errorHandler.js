@@ -5,7 +5,6 @@ import { MongooseError } from 'mongoose';
 const { INTERNAL_SERVER_ERROR, BAD_REQUEST } = HTTP_STATUSES;
 
 export const errorHandler = (error, req, res, next) => {
-  console.log('error: ', error);
   let ERROR_STATUS;
 
   if (error instanceof SyntaxError && 'body' in error) {
