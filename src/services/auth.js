@@ -5,27 +5,26 @@ import { TOKEN_PARAMS } from '../constants/index.js';
 import { env } from '../utils/env.js';
 import { SessionCollection } from '../db/models/sessions.js';
 
-export const registerUser = async (payload) => {
-  const user = await UserCollection.findOne({ email: payload.email });
+export const registerUser = async (userData) => {
+  const { email, password } = userData;
+
+  const user = await UserCollection.findOne({ email });
 
   if (user) {
     throw createHttpError.Conflict('Email in use');
   }
 
-  const hashedPassword = await bcrypt.hash(
-    payload.password,
-    Number(env('SALT')),
-  );
+  const hashedPassword = await bcrypt.hash(password, Number(env('SALT')));
 
-  return await UserCollection.create({ ...payload, password: hashedPassword });
+  return await UserCollection.create({ ...userData, password: hashedPassword });
 };
 
-export const loginUser = async (payload) => {
-  const { email, password } = payload;
+export const loginUser = async (userData) => {
+  const { email, password } = userData;
   const user = await UserCollection.findOne({ email });
 
   if (!user) {
-    throw createHttpError.NotFound('User not found');
+    throw createHttpError.Unauthorized('User not authorized');
   }
 
   const isValidPassword = await bcrypt.compare(password, user.password);
