@@ -11,12 +11,12 @@ const { CREATED, OK, NO_CONTENT } = HTTP_STATUSES;
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expires: new Date(Date.now() + THIRTY_DAYS),
+    expire: new Date(Date.now() + THIRTY_DAYS),
   });
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    expires: new Date(Date.now() + THIRTY_DAYS),
+    expire: new Date(Date.now() + THIRTY_DAYS),
   });
 };
 
