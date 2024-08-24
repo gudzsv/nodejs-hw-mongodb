@@ -10,7 +10,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
 
-const PORT = Number(env(ENV_VARS.PORT, 3000));
+const PORT = Number(env(ENV_VARS.APP_PORT, 3000));
 
 export const setupServer = () => {
   const app = express();

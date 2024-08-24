@@ -44,3 +44,30 @@ export const loginUserSchema = Joi.object({
     'string.max': MAX,
   }),
 });
+
+export const sendResetEmailSchema = Joi.object({
+  email: Joi.string()
+    .min(MIN_LENGTH)
+    .max(MAX_LENGTH)
+    .email({ tlds: { allow: false } })
+    .required()
+    .messages({
+      'string.base': STRING,
+      'string.min': MIN,
+      'string.max': MAX,
+      'string.email': EMAIL,
+    }),
+});
+
+export const resetPasswordSchema = Joi.object({
+  token: Joi.string().required().messages({
+    'string.base': STRING,
+    'string.min': MIN,
+    'string.max': MAX,
+    'string.email': EMAIL,
+  }),
+  password: Joi.string().min(MIN_LENGTH).max(MAX_LENGTH).required().messages({
+    'string.min': MIN,
+    'string.max': MAX,
+  }),
+});
