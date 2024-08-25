@@ -130,18 +130,18 @@ export const resetPassword = async (token, password) => {
   }
 
   const user = await UserCollection.findOne({
-    email: userData.email,
     _id: userData.sub,
+    email: userData.email,
   });
 
   if (!user) {
     throw createHttpError.Unauthorized('User not found!');
   }
 
-  await UserCollection.updateOne({
-    _id: user._id,
-    password: await getEncryptedPassword(password),
-  });
+  await UserCollection.updateOne(
+    { _id: user._id },
+    { $set: { password: await getEncryptedPassword(password) } },
+  );
 
   await SessionCollection.findOneAndDelete({ userId: user._id });
 };
