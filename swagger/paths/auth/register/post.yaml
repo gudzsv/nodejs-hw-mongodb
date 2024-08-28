@@ -1,0 +1,35 @@
+tags:
+  - Auth
+summary: User registration
+operationId: registerUser
+description: 'Register a user'
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+        properties:
+          name:
+            description: "User's name"
+            type: string
+            example: 'User One'
+          email:
+            description: "User's email"
+            type: string
+            example: 'userone@example.com'
+          password:
+            description: "User's password"
+            type: string
+            example: '123Qwe!xX'
+
+responses:
+  '201':
+    $ref: ../../../components/responses//201.yaml
+  '400':
+    $ref: ../../../components/responses/400.yaml
