@@ -1,6 +1,6 @@
 const CONTACT_TYPE = ['work', 'home', 'personal'];
 
-const parseContactType = (type = 'personal') => {
+const parseContactType = (type) => {
   if (typeof type !== 'string') return;
   if (CONTACT_TYPE.includes(type)) return type;
 };

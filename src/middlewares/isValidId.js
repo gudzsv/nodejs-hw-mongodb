@@ -6,7 +6,7 @@ export const isValidId =
   (idName = 'id') =>
   (req, res, next) => {
     const id = req.params[idName];
-    console.log('id: ', id);
+
 
     if (!id) throw new Error('id is not provided in isValidId');
 
