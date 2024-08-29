@@ -18,7 +18,14 @@ content:
           type: object
           required:
             - message
-          properties:
-            message:
-              type: string
-              example: 'User not authorized'
+          oneOf:
+            - properties:
+                data:
+                  properties:
+                    message:
+                      example: 'User not authorized'
+            - properties:
+                data:
+                  properties:
+                    message:
+                      example: 'Access token expired'

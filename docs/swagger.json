@@ -28,6 +28,323 @@
     }
   ],
   "paths": {
+    "/contacts": {
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Create a new contact",
+        "operationId": "createContact",
+        "description": "**Create a new contact**\n\nThis endpoint allows users to create a new contact with the following details:\n\n- **Required fields:**\n  - **Name**: The contact's full name.\n  - **Phone Number**: The contact's phone number, including country code if necessary.\n  - **Contact Type**: The type of contact (e.g., work, home, personal).\n\n- **Optional fields:**\n  - **Email**: The contact's email address.\n  - **Is Favorite**: A flag indicating whether the contact is marked as a favorite.\n  - **Photo**: An optional file for the contact's photo (should be in image format).\n\nEnsure that all required fields are provided to successfully create a contact. Optionally, you may include additional information to enrich the contact's details.\n",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "phoneNumber",
+                  "contactType"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The full name of the contact.",
+                    "example": "Nik Brook"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "The contact's phone number, including country code if necessary.",
+                    "example": "+38000000899"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "The contact's email address. This is optional.",
+                    "example": "nik@example.com"
+                  },
+                  "isFavorite": {
+                    "type": "boolean",
+                    "description": "Indicates whether the contact is marked as a favorite.",
+                    "example": false
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "description": "The type of the contact. It can be 'work', 'home', or 'personal'.",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "example": "personal"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "An optional file for the contact's photo. It should be in image format."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created a contact!"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/contact"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "createdAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2024-08-29T20:39:40.775Z"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2024-08-29T20:39:40.775Z"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid or missing required fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "BadRequestError"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "field": {
+                                "type": "string",
+                                "description": "The specific field with an error.",
+                                "example": "name"
+                              },
+                              "error": {
+                                "type": "string",
+                                "description": "Detailed error message regarding the validation issue.",
+                                "example": "'name' is a required field"
+                              }
+                            },
+                            "required": [
+                              "field",
+                              "error"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "field": {
+                                "type": "string",
+                                "description": "The specific field with an error.",
+                                "example": "phoneNumber"
+                              },
+                              "error": {
+                                "type": "string",
+                                "description": "Detailed error message regarding the validation issue.",
+                                "example": "'phoneNumber' is a required field"
+                              }
+                            },
+                            "required": [
+                              "field",
+                              "error"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "field": {
+                                "type": "string",
+                                "description": "The specific field with an error.",
+                                "example": "contactType"
+                              },
+                              "error": {
+                                "type": "string",
+                                "description": "Detailed error message regarding the validation issue.",
+                                "example": "'contactType' is a required field"
+                              }
+                            },
+                            "required": [
+                              "field",
+                              "error"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication required or token invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "UnauthorizedError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "User not authorized"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "examples": {
+                  "no_token": {
+                    "summary": "User not authorized",
+                    "value": {
+                      "status": 401,
+                      "message": "UnauthorizedError",
+                      "data": {
+                        "message": "User not authorized"
+                      }
+                    }
+                  },
+                  "token_expired": {
+                    "summary": "Access token expired",
+                    "value": {
+                      "status": 401,
+                      "message": "UnauthorizedError",
+                      "data": {
+                        "message": "Access token expired"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found Error - Session or Authorization header not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "NotFoundError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Session not found"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "examples": {
+                  "no_token": {
+                    "summary": "Session not found",
+                    "value": {
+                      "status": 404,
+                      "message": "NotFoundError",
+                      "data": {
+                        "message": "Session not found"
+                      }
+                    }
+                  },
+                  "token_expired": {
+                    "summary": "Authorization header not found",
+                    "value": {
+                      "status": 404,
+                      "message": "NotFoundError",
+                      "data": {
+                        "message": "Authorization header not found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/contacts/{contactId}": {
       "get": {
         "tags": [
@@ -243,11 +560,6 @@
           "userId"
         ],
         "properties": {
-          "_id": {
-            "description": "Contact's id",
-            "type": "string",
-            "example": "66cb5f4d0318528063e77c98"
-          },
           "name": {
             "description": "Contact's name",
             "type": "string",
@@ -287,6 +599,11 @@
             "description": "Link to contact's photo",
             "type": "string",
             "example": "https://res.cloudinary.com/dg5fttpzf/image/upload/v1724604273/vnytdl8f8xwylaaaud6b.jpg"
+          },
+          "_id": {
+            "description": "Contact's id",
+            "type": "string",
+            "example": "66cb5f4d0318528063e77c98"
           }
         }
       }
@@ -418,12 +735,30 @@
                   "required": [
                     "message"
                   ],
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not authorized"
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "data": {
+                          "properties": {
+                            "message": {
+                              "example": "User not authorized"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "properties": {
+                            "message": {
+                              "example": "Access token expired"
+                            }
+                          }
+                        }
+                      }
                     }
-                  }
+                  ]
                 }
               }
             }

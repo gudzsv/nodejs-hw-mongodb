@@ -6,10 +6,6 @@ required:
   - contactType
   - userId
 properties:
-  _id:
-    description: "Contact's id"
-    type: string
-    example: 66cb5f4d0318528063e77c98
   name:
     description: "Contact's name"
     type: string
@@ -39,3 +35,7 @@ properties:
     description: "Link to contact's photo"
     type: string
     example: https://res.cloudinary.com/dg5fttpzf/image/upload/v1724604273/vnytdl8f8xwylaaaud6b.jpg
+  _id:
+    description: "Contact's id"
+    type: string
+    example: 66cb5f4d0318528063e77c98
