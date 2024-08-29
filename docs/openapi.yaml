@@ -23,6 +23,9 @@ paths:
   /auth/register:
     post:
       $ref: ../swagger/paths/auth/register/post.yaml
+  /auth/login:
+    post:
+      $ref: ../swagger/paths/auth/login/post.yaml
 
 components:
   securitySchemes:
