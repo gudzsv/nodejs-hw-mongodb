@@ -17,7 +17,7 @@ const PORT = Number(env(ENV_VARS.APP_PORT, 3000));
 export const setupServer = () => {
   const app = express();
 
-  app.use(cors(corsConfigs));
+  app.use(cors());
 
   app.use(cookieParser());
 
