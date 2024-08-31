@@ -1,10 +1,13 @@
 import Joi from 'joi';
-import { JOI_VALIDATION_MSG, VALIDATION_LENGTH } from '../constants/index.js';
+import {
+  JOI_VALIDATION_MSG,
+  EMAIL_VALIDATION_LENGTH,
+} from '../constants/index.js';
 
 const { MIN, MAX, ONE_OF, REQUIRED, STRING, BOOLEAN, PHONE_NUMBER, EMAIL } =
   JOI_VALIDATION_MSG;
 
-const { MIN_LENGTH, MAX_LENGTH } = VALIDATION_LENGTH;
+const { MIN_LENGTH, MAX_LENGTH } = EMAIL_VALIDATION_LENGTH;
 
 const phoneNumberPattern = /^\+?\d[\d-]*\d$/;
 

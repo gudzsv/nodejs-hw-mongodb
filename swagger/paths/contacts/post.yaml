@@ -1,23 +1,24 @@
 tags:
   - Contacts
-summary: Create a new contact
+summary: Create a New Contact
 operationId: createContact
 description: |
-  **Create a new contact**
+  **Create a new contact** with detailed information using this endpoint.
 
-  This endpoint allows users to create a new contact with the following details:
+  ### Required Fields
+  - **Name**: The full name of the contact.
+  - **Phone Number**: The contact's phone number, including country code if necessary.
+  - **Contact Type**: The type of contact (e.g., work, home, personal).
 
-  - **Required fields:**
-    - **Name**: The contact's full name.
-    - **Phone Number**: The contact's phone number, including country code if necessary.
-    - **Contact Type**: The type of contact (e.g., work, home, personal).
+  ### Optional Fields
+  - **Email**: The contact's email address (optional).
+  - **Is Favorite**: A boolean flag indicating whether the contact is marked as a favorite (optional).
+  - **Photo**: An optional image file for the contact's photo.
 
-  - **Optional fields:**
-    - **Email**: The contact's email address.
-    - **Is Favorite**: A flag indicating whether the contact is marked as a favorite.
-    - **Photo**: An optional file for the contact's photo (should be in image format).
+  Ensure that all required fields are provided to successfully create a contact. You may also include additional optional details to enrich the contact's information.
 
-  Ensure that all required fields are provided to successfully create a contact. Optionally, you may include additional information to enrich the contact's details.
+  ### Security
+  - This endpoint requires authentication via a Bearer Token. Include a valid token in the `Authorization` header.
 
 security:
   - bearerAuth: []
@@ -59,7 +60,9 @@ requestBody:
 
 responses:
   '201':
-    description: Contact successfully created
+    description: |
+      **Contact Successfully Created**
+      The contact was created successfully. The response contains details of the newly created contact.
     content:
       application/json:
         schema:
@@ -68,22 +71,31 @@ responses:
             status:
               type: integer
               example: 201
+              description: HTTP status code
             message:
               type: string
               example: Successfully created a contact!
+              description: Confirmation message indicating successful creation
             data:
               allOf:
                 - $ref: '../../components/schemas/contact.yaml'
                 - type: object
                   properties:
+                    _id:
+                      type: string
+                      example: 66cb5f4d0318528063e77c98
+                      description: Unique identifier for the created contact
                     createdAt:
                       type: string
                       format: date-time
                       example: '2024-08-29T20:39:40.775Z'
+                      description: The date and time when the contact was created
                     updatedAt:
                       type: string
                       format: date-time
                       example: '2024-08-29T20:39:40.775Z'
+                      description: The date and time when the contact was last updated
+
   '400':
     description: Bad Request - Invalid or missing required fields
     content:
@@ -94,96 +106,27 @@ responses:
             status:
               type: integer
               example: 400
+              description: HTTP status code
             message:
               type: string
               example: BadRequestError
-            errors:
-              type: array
-              items:
-                oneOf:
-                  - type: object
-                    properties:
-                      field:
-                        type: string
-                        description: 'The specific field with an error.'
-                        example: 'name'
-                      error:
-                        type: string
-                        description: 'Detailed error message regarding the validation issue.'
-                        example: "'name' is a required field"
-                    required:
-                      - field
-                      - error
-                    additionalProperties: false
-                  - type: object
-                    properties:
-                      field:
-                        type: string
-                        description: 'The specific field with an error.'
-                        example: 'phoneNumber'
-                      error:
-                        type: string
-                        description: 'Detailed error message regarding the validation issue.'
-                        example: "'phoneNumber' is a required field"
-                    required:
-                      - field
-                      - error
-                    additionalProperties: false
-                  - type: object
-                    properties:
-                      field:
-                        type: string
-                        description: 'The specific field with an error.'
-                        example: 'contactType'
-                      error:
-                        type: string
-                        description: 'Detailed error message regarding the validation issue.'
-                        example: "'contactType' is a required field"
-                    required:
-                      - field
-                      - error
-                    additionalProperties: false
-  '404':
-    description: Not found Error - Session or Authorization header not found
-    content:
-      application/json:
-        schema:
-          type: object
+              description: Error message indicating the nature of the bad request
+            data:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'Bad request, body parameters are incorrect'
+                  description: Detailed error message
+                errors:
+                  type: string
+                  example: "'name' is a required field; 'phoneNumber' is a required field; 'contactType' is a required field"
+                  description: List of validation errors
           required:
             - status
             - message
             - data
-          properties:
-            status:
-              type: integer
-              example: 404
-            message:
-              type: string
-              example: NotFoundError
-            data:
-              type: object
-              required:
-                - message
-              properties:
-                message:
-                  type: string
-                  example: 'Session not found'
-              additionalProperties: false
-        examples:
-          no_token:
-            summary: Session not found
-            value:
-              status: 404
-              message: NotFoundError
-              data:
-                message: Session not found
-          token_expired:
-            summary: Authorization header not found
-            value:
-              status: 404
-              message: NotFoundError
-              data:
-                message: Authorization header not found
+
   '401':
     description: Unauthorized - Authentication required or token invalid
     content:
@@ -198,9 +141,11 @@ responses:
             status:
               type: integer
               example: 401
+              description: HTTP status code
             message:
               type: string
               example: UnauthorizedError
+              description: Error message indicating authentication issues
             data:
               type: object
               required:
@@ -209,6 +154,7 @@ responses:
                 message:
                   type: string
                   example: 'User not authorized'
+                  description: Detailed message about the authorization issue
               additionalProperties: false
         examples:
           no_token:
@@ -225,3 +171,48 @@ responses:
               message: UnauthorizedError
               data:
                 message: Access token expired
+
+  '404':
+    description: Not Found - Session or Authorization header not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+              description: HTTP status code
+            message:
+              type: string
+              example: NotFoundError
+              description: Error message indicating that the resource was not found
+            data:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  example: 'Session not found'
+                  description: Detailed message about the missing session or header
+              additionalProperties: false
+        examples:
+          no_token:
+            summary: Session not found
+            value:
+              status: 404
+              message: NotFoundError
+              data:
+                message: Session not found
+          token_expired:
+            summary: Authorization header not found
+            value:
+              status: 404
+              message: NotFoundError
+              data:
+                message: Authorization header not found

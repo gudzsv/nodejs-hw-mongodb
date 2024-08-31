@@ -63,6 +63,11 @@ export const VALIDATION_LENGTH = {
   MAX_LENGTH: 20,
 };
 
+export const EMAIL_VALIDATION_LENGTH = {
+  MIN_LENGTH: 3,
+  MAX_LENGTH: 50,
+};
+
 export const DEFAULT_PAGINATION_DATA = {
   PAGE: 1,
   PER_PAGE: 10,

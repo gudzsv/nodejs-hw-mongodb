@@ -33,9 +33,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Create a new contact",
+        "summary": "Create a New Contact",
         "operationId": "createContact",
-        "description": "**Create a new contact**\n\nThis endpoint allows users to create a new contact with the following details:\n\n- **Required fields:**\n  - **Name**: The contact's full name.\n  - **Phone Number**: The contact's phone number, including country code if necessary.\n  - **Contact Type**: The type of contact (e.g., work, home, personal).\n\n- **Optional fields:**\n  - **Email**: The contact's email address.\n  - **Is Favorite**: A flag indicating whether the contact is marked as a favorite.\n  - **Photo**: An optional file for the contact's photo (should be in image format).\n\nEnsure that all required fields are provided to successfully create a contact. Optionally, you may include additional information to enrich the contact's details.\n",
+        "description": "**Create a new contact** with detailed information using this endpoint.\n\n### Required Fields\n- **Name**: The full name of the contact.\n- **Phone Number**: The contact's phone number, including country code if necessary.\n- **Contact Type**: The type of contact (e.g., work, home, personal).\n\n### Optional Fields\n- **Email**: The contact's email address (optional).\n- **Is Favorite**: A boolean flag indicating whether the contact is marked as a favorite (optional).\n- **Photo**: An optional image file for the contact's photo.\n\nEnsure that all required fields are provided to successfully create a contact. You may also include additional optional details to enrich the contact's information.\n\n### Security\n- This endpoint requires authentication via a Bearer Token. Include a valid token in the `Authorization` header.\n",
         "security": [
           {
             "bearerAuth": []
@@ -94,7 +94,7 @@
         },
         "responses": {
           "201": {
-            "description": "Contact successfully created",
+            "description": "**Contact Successfully Created**\nThe contact was created successfully. The response contains details of the newly created contact.\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -102,11 +102,13 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 201
+                      "example": 201,
+                      "description": "HTTP status code"
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully created a contact!"
+                      "example": "Successfully created a contact!",
+                      "description": "Confirmation message indicating successful creation"
                     },
                     "data": {
                       "allOf": [
@@ -116,15 +118,22 @@
                         {
                           "type": "object",
                           "properties": {
+                            "_id": {
+                              "type": "string",
+                              "example": "66cb5f4d0318528063e77c98",
+                              "description": "Unique identifier for the created contact"
+                            },
                             "createdAt": {
                               "type": "string",
                               "format": "date-time",
-                              "example": "2024-08-29T20:39:40.775Z"
+                              "example": "2024-08-29T20:39:40.775Z",
+                              "description": "The date and time when the contact was created"
                             },
                             "updatedAt": {
                               "type": "string",
                               "format": "date-time",
-                              "example": "2024-08-29T20:39:40.775Z"
+                              "example": "2024-08-29T20:39:40.775Z",
+                              "description": "The date and time when the contact was last updated"
                             }
                           }
                         }
@@ -144,77 +153,369 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 400
+                      "example": 400,
+                      "description": "HTTP status code"
                     },
                     "message": {
                       "type": "string",
-                      "example": "BadRequestError"
+                      "example": "BadRequestError",
+                      "description": "Error message indicating the nature of the bad request"
                     },
-                    "errors": {
-                      "type": "array",
-                      "items": {
-                        "oneOf": [
-                          {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Bad request, body parameters are incorrect",
+                          "description": "Detailed error message"
+                        },
+                        "errors": {
+                          "type": "string",
+                          "example": "'name' is a required field; 'phoneNumber' is a required field; 'contactType' is a required field",
+                          "description": "List of validation errors"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication required or token invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401,
+                      "description": "HTTP status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "UnauthorizedError",
+                      "description": "Error message indicating authentication issues"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "User not authorized",
+                          "description": "Detailed message about the authorization issue"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "examples": {
+                  "no_token": {
+                    "summary": "User not authorized",
+                    "value": {
+                      "status": 401,
+                      "message": "UnauthorizedError",
+                      "data": {
+                        "message": "User not authorized"
+                      }
+                    }
+                  },
+                  "token_expired": {
+                    "summary": "Access token expired",
+                    "value": {
+                      "status": 401,
+                      "message": "UnauthorizedError",
+                      "data": {
+                        "message": "Access token expired"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Session or Authorization header not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404,
+                      "description": "HTTP status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "NotFoundError",
+                      "description": "Error message indicating that the resource was not found"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Session not found",
+                          "description": "Detailed message about the missing session or header"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "examples": {
+                  "no_token": {
+                    "summary": "Session not found",
+                    "value": {
+                      "status": 404,
+                      "message": "NotFoundError",
+                      "data": {
+                        "message": "Session not found"
+                      }
+                    }
+                  },
+                  "token_expired": {
+                    "summary": "Authorization header not found",
+                    "value": {
+                      "status": 404,
+                      "message": "NotFoundError",
+                      "data": {
+                        "message": "Authorization header not found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Retrieve a List of Contacts",
+        "operationId": "getContacts",
+        "description": "**Retrieve a list of contacts** with advanced filtering, sorting, and pagination options.\n\nThis endpoint allows you to:\n- **Filter** contacts by various attributes such as name, phone number, email, and more.\n- **Sort** contacts based on any field in either ascending or descending order.\n- **Paginate** results to efficiently manage large datasets.\n\n### Security\n- Requires a valid Bearer Token to be provided in the `Authorization` header.\n",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1,
+            "description": "**Page Number**\nThe page number to retrieve. Defaults to `1` if not specified.\n"
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 10,
+            "description": "**Contacts per Page**\nThe number of contacts to display per page. Defaults to `10` if not specified.\n"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string"
+            },
+            "example": "createdAt",
+            "description": "**Sorting Field**\nThe field by which to sort the contacts. Any contact field can be used.\nDefaults to `_id` if not specified.\n"
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "example": "asc",
+            "description": "**Sorting Order**\nThe order to sort by, either ascending (`asc`) or descending (`desc`).\n"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Nik Brook",
+            "description": "**Filter by Name**\nFilter contacts whose names match the specified value.\n"
+          },
+          {
+            "in": "query",
+            "name": "phoneNumber",
+            "schema": {
+              "type": "string"
+            },
+            "example": "+38000000899",
+            "description": "**Filter by Phone Number**\nFilter contacts based on the provided phone number.\n"
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "schema": {
+              "type": "string"
+            },
+            "example": "nik@example.com",
+            "description": "**Filter by Email Address**\nFilter contacts based on the provided email address.\n"
+          },
+          {
+            "in": "query",
+            "name": "isFavorite",
+            "schema": {
+              "type": "boolean"
+            },
+            "example": true,
+            "description": "**Filter by Favorite Status**\nFilter contacts that are marked as favorites (`true`) or not (`false`).\n"
+          },
+          {
+            "in": "query",
+            "name": "contactType",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "work",
+                "home",
+                "personal"
+              ]
+            },
+            "example": "personal",
+            "description": "**Filter by Contact Type**\nFilter contacts by type (e.g., `work`, `home`, `personal`). Defaults to `personal` if not specified.\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**Contacts Retrieved Successfully**\nThe contact list was successfully retrieved. The response includes details of the contacts, pagination information, and other relevant metadata.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200,
+                      "description": "HTTP status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully retrieved contacts!",
+                      "description": "Confirmation message indicating successful retrieval"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
                             "type": "object",
-                            "properties": {
-                              "field": {
-                                "type": "string",
-                                "description": "The specific field with an error.",
-                                "example": "name"
+                            "allOf": [
+                              {
+                                "$ref": "#/components/schemas/contact"
                               },
-                              "error": {
-                                "type": "string",
-                                "description": "Detailed error message regarding the validation issue.",
-                                "example": "'name' is a required field"
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "_id": {
+                                    "type": "string",
+                                    "example": "66cb5f4d0318528063e77c98",
+                                    "description": "Unique identifier for the contact"
+                                  },
+                                  "createdAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2024-08-29T20:39:40.775Z",
+                                    "description": "The date and time when the contact was created"
+                                  },
+                                  "updatedAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2024-08-29T20:39:40.775Z",
+                                    "description": "The date and time when the contact was last updated"
+                                  }
+                                }
                               }
-                            },
-                            "required": [
-                              "field",
-                              "error"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "field": {
-                                "type": "string",
-                                "description": "The specific field with an error.",
-                                "example": "phoneNumber"
-                              },
-                              "error": {
-                                "type": "string",
-                                "description": "Detailed error message regarding the validation issue.",
-                                "example": "'phoneNumber' is a required field"
-                              }
-                            },
-                            "required": [
-                              "field",
-                              "error"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "field": {
-                                "type": "string",
-                                "description": "The specific field with an error.",
-                                "example": "contactType"
-                              },
-                              "error": {
-                                "type": "string",
-                                "description": "Detailed error message regarding the validation issue.",
-                                "example": "'contactType' is a required field"
-                              }
-                            },
-                            "required": [
-                              "field",
-                              "error"
-                            ],
-                            "additionalProperties": false
+                            ]
                           }
-                        ]
+                        },
+                        "page": {
+                          "type": "integer",
+                          "example": 1,
+                          "description": "Current page number"
+                        },
+                        "perPage": {
+                          "type": "integer",
+                          "example": 10,
+                          "description": "Number of contacts per page"
+                        },
+                        "totalItems": {
+                          "type": "integer",
+                          "example": 4,
+                          "description": "Total number of contacts matching the query"
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 1,
+                          "description": "Total number of pages available"
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": false,
+                          "description": "Whether there are more pages available after the current page"
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": false,
+                          "description": "Whether there are pages available before the current page"
+                        }
                       }
                     }
                   }
@@ -223,7 +524,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized - Authentication required or token invalid",
+            "description": "Unauthorized - Authentication required or invalid token.",
             "content": {
               "application/json": {
                 "schema": {
@@ -244,9 +545,6 @@
                     },
                     "data": {
                       "type": "object",
-                      "required": [
-                        "message"
-                      ],
                       "properties": {
                         "message": {
                           "type": "string",
@@ -283,7 +581,7 @@
             }
           },
           "404": {
-            "description": "Not found Error - Session or Authorization header not found",
+            "description": "Not Found - Session or Authorization header not found.",
             "content": {
               "application/json": {
                 "schema": {
@@ -304,9 +602,6 @@
                     },
                     "data": {
                       "type": "object",
-                      "required": [
-                        "message"
-                      ],
                       "properties": {
                         "message": {
                           "type": "string",
@@ -350,9 +645,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Get contact by id",
+        "summary": "Retrieve a Contact by ID",
         "operationId": "getContact",
-        "description": "Get contact by id",
+        "description": "**Retrieve a specific contact by its unique identifier.**\n\nThis endpoint allows you to fetch details of a contact using its `contactId`.\n\n### Security\n- Requires a valid Bearer Token to be provided in the `Authorization` header.\n",
         "security": [
           {
             "bearerAuth": []
@@ -366,12 +661,13 @@
             "schema": {
               "type": "string",
               "example": "66cb5f4d0318528063e77c98"
-            }
+            },
+            "description": "**The unique identifier of the contact.**\n\nThis `contactId` must be a valid string representing an existing contact.\n"
           }
         ],
         "responses": {
           "200": {
-            "description": "Get contact by id",
+            "description": "**Contact Retrieved Successfully**\n\nThe contact details were successfully retrieved. The response contains the following structure:\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -384,15 +680,18 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 200
+                      "example": 200,
+                      "description": "HTTP status code"
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully found contact with id 66cb5f4d0318528063e77c98!"
+                      "example": "Successfully found contact with id 66cb5f4d0318528063e77c98!",
+                      "description": "Human-readable message confirming the retrieval of the contact"
                     },
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/contact"
+                      "$ref": "#/components/schemas/contact",
+                      "description": "The contact object containing all details"
                     }
                   }
                 }
@@ -400,7 +699,547 @@
             }
           },
           "404": {
-            "$ref": "#/components/responses/404"
+            "$ref": "#/components/responses/404",
+            "description": "**Contact Not Found**\n\nThe provided `contactId` does not match any existing contact.\n"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Update an Existing Contact",
+        "operationId": "updateContact",
+        "description": "**Update an Existing Contact**\n\nThis endpoint allows you to partially update an existing contact. You can modify any of the fields except for system fields and `userId`.\n\n### Fields that Can Be Updated\n- **Name**: The contact's full name.\n- **Phone Number**: The contact's phone number, including country code if necessary.\n- **Email**: The contact's email address (optional).\n- **Is Favorite**: A boolean flag indicating whether the contact is marked as a favorite.\n- **Contact Type**: The type of the contact. Options include `work`, `home`, and `personal`.\n- **Photo**: An optional file for the contact's photo. This should be an image file.\n\n### Fields that Cannot Be Updated\n- **System Fields**:\n  - **_id**: Unique identifier for the contact, automatically generated.\n  - **createdAt**: Timestamp when the contact was created, managed by the system.\n  - **updatedAt**: Timestamp when the contact was last updated, managed by the system.\n- **userId**: The ID of the user associated with the contact, which is extracted from the Bearer Token and cannot be updated.\n\n### Security\n- **Authentication Required**: This endpoint requires authentication. Include a valid Bearer Token in the `Authorization` header to identify the `userId` associated with the contact.\n",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "contactId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the contact to be updated.",
+            "example": "66cb5f4d0318528063e77c98"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The full name of the contact.",
+                    "example": "Nik Brook"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "The contact's phone number, including country code if necessary.",
+                    "example": "+38000000899"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "The contact's email address. This is optional.",
+                    "example": "nik@example.com"
+                  },
+                  "isFavorite": {
+                    "type": "boolean",
+                    "description": "Indicates whether the contact is marked as a favorite.",
+                    "example": false
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "description": "The type of the contact. It can be `work`, `home`, or `personal`.",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "example": "personal"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "An optional file for the contact's photo. It should be in image format."
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**Contact Successfully Updated**\n\nThe contact was updated successfully. The response includes details of the updated contact.\n\n- **_id**: Unique identifier for the updated contact.\n- **createdAt**: Timestamp when the contact was created.\n- **updatedAt**: Timestamp when the contact was last updated.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200,
+                      "description": "HTTP status code indicating successful update"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully updated the contact!",
+                      "description": "Confirmation message indicating successful update"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/contact"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "_id": {
+                              "type": "string",
+                              "example": "66cb5f4d0318528063e77c98",
+                              "description": "Unique identifier for the updated contact"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2024-08-29T20:39:40.775Z",
+                              "description": "The date and time when the contact was created"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2024-08-29T20:39:40.775Z",
+                              "description": "The date and time when the contact was last updated"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "**Bad Request**\n\nThe request was invalid or contained errors. Ensure all provided fields are correct and valid.\n\n- **message**: Detailed error message.\n- **errors**: List of validation errors.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400,
+                      "description": "HTTP status code indicating a bad request"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "BadRequestError",
+                      "description": "Error message indicating the nature of the bad request"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Bad request, body parameters are incorrect",
+                          "description": "Detailed error message"
+                        },
+                        "errors": {
+                          "type": "string",
+                          "example": "'name' is a required field; 'phoneNumber' is a required field; 'contactType' is a required field",
+                          "description": "List of validation errors"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "**Unauthorized**\n\nAuthentication is required or the provided token is invalid.\n\n- **message**: Detailed message about the authorization issue.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401,
+                      "description": "HTTP status code indicating unauthorized access"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "UnauthorizedError",
+                      "description": "Error message indicating authentication issues"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "User not authorized",
+                          "description": "Detailed message about the authorization issue"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "examples": {
+                  "no_token": {
+                    "summary": "User not authorized",
+                    "value": {
+                      "status": 401,
+                      "message": "UnauthorizedError",
+                      "data": {
+                        "message": "User not authorized"
+                      }
+                    }
+                  },
+                  "token_expired": {
+                    "summary": "Access token expired",
+                    "value": {
+                      "status": 401,
+                      "message": "UnauthorizedError",
+                      "data": {
+                        "message": "Access token expired"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "**Not Found**\n\nThe session or Authorization header was not found. Verify that the required session or header is included.\n\n- **message**: Detailed message about the missing session or header.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404,
+                      "description": "HTTP status code indicating that the resource was not found"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "NotFoundError",
+                      "description": "Error message indicating that the resource was not found"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Session not found",
+                          "description": "Detailed message about the missing session or header"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "examples": {
+                  "no_token": {
+                    "summary": "Session not found",
+                    "value": {
+                      "status": 404,
+                      "message": "NotFoundError",
+                      "data": {
+                        "message": "Session not found"
+                      }
+                    }
+                  },
+                  "token_expired": {
+                    "summary": "Authorization header not found",
+                    "value": {
+                      "status": 404,
+                      "message": "NotFoundError",
+                      "data": {
+                        "message": "Authorization header not found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "**Internal Server Error**\n\nAn unexpected error occurred on the server side. Please try again later.\n\n- **message**: Detailed error message.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 500,
+                      "description": "HTTP status code indicating an internal server error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "InternalServerError",
+                      "description": "Error message indicating an internal server issue"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Failed to save photo, please try again later.",
+                          "description": "Detailed error message"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Delete an Existing Contact",
+        "operationId": "deleteContact",
+        "description": "**Delete an Existing Contact**\n\nThis endpoint allows you to delete an existing contact from your list. Once deleted, the contact cannot be recovered.\n\n### Security\n- **Authentication Required**: This endpoint requires authentication. Include a valid Bearer Token in the `Authorization` header to identify the `userId` associated with the contact.\n\n### Parameters\n- **contactId**: The unique identifier of the contact you wish to delete. This must be provided in the path.\n",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "contactId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the contact to be deleted.",
+            "example": "66cb5f4d0318528063e77c98"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "**No Content**\n\nThe contact was successfully deleted. There is no content in the response body, only the status code 204 indicating a successful deletion.\n",
+            "content": {}
+          },
+          "400": {
+            "description": "**Bad Request**\n\nThe request was invalid or contained errors. Ensure that the `contactId` provided is correct.\n\n- **message**: Detailed error message.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400,
+                      "description": "HTTP status code indicating a bad request"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "BadRequestError",
+                      "description": "Error message indicating the nature of the bad request"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid contactId provided",
+                          "description": "Detailed error message"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "**Unauthorized**\n\nAuthentication is required or the provided token is invalid.\n\n- **message**: Detailed message about the authorization issue.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401,
+                      "description": "HTTP status code indicating unauthorized access"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "UnauthorizedError",
+                      "description": "Error message indicating authentication issues"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "User not authorized",
+                          "description": "Detailed message about the authorization issue"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "examples": {
+                  "no_token": {
+                    "summary": "User not authorized",
+                    "value": {
+                      "status": 401,
+                      "message": "UnauthorizedError",
+                      "data": {
+                        "message": "User not authorized"
+                      }
+                    }
+                  },
+                  "token_expired": {
+                    "summary": "Access token expired",
+                    "value": {
+                      "status": 401,
+                      "message": "UnauthorizedError",
+                      "data": {
+                        "message": "Access token expired"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "**Not Found**\n\nThe contact could not be found. Verify that the `contactId` provided is correct.\n\n- **message**: Detailed message about the missing contact.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404,
+                      "description": "HTTP status code indicating that the resource was not found"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "NotFoundError",
+                      "description": "Error message indicating that the contact was not found"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Contact not found",
+                          "description": "Detailed message about the missing contact"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "**Internal Server Error**\n\nAn unexpected error occurred on the server side. Please try again later.\n\n- **message**: Detailed error message.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 500,
+                      "description": "HTTP status code indicating an internal server error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "InternalServerError",
+                      "description": "Error message indicating an internal server issue"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Failed to delete contact, please try again later.",
+                          "description": "Detailed error message"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -553,35 +1392,33 @@
       "contact": {
         "type": "object",
         "required": [
-          "_id",
           "name",
           "phoneNumber",
-          "contactType",
-          "userId"
+          "contactType"
         ],
         "properties": {
           "name": {
-            "description": "Contact's name",
+            "description": "The full name of the contact",
             "type": "string",
             "example": "Nik Brook"
           },
           "phoneNumber": {
-            "description": "Contacts's age",
+            "description": "The contact's phone number",
             "type": "string",
             "example": "+38000000899"
           },
           "email": {
-            "description": "Contact's email",
+            "description": "The contact's email address",
             "type": "string",
             "example": "nik@example.com"
           },
           "isFavorite": {
-            "description": "Whether is contact in Favorite",
+            "description": "Indicates whether the contact is marked as a favorite",
             "type": "boolean",
             "example": false
           },
           "contactType": {
-            "description": "Contact's type",
+            "description": "The category of the contact (e.g., work, home, personal)",
             "type": "string",
             "enum": [
               "work",
@@ -591,19 +1428,14 @@
             "example": "personal"
           },
           "userId": {
-            "description": "Contact's user Id",
+            "description": "The ID of the user who owns this contact",
             "type": "string",
             "example": "66cb5ed80318528063e77c87"
           },
           "photo": {
-            "description": "Link to contact's photo",
+            "description": "URL to the contact's photo",
             "type": "string",
             "example": "https://res.cloudinary.com/dg5fttpzf/image/upload/v1724604273/vnytdl8f8xwylaaaud6b.jpg"
-          },
-          "_id": {
-            "description": "Contact's id",
-            "type": "string",
-            "example": "66cb5f4d0318528063e77c98"
           }
         }
       }

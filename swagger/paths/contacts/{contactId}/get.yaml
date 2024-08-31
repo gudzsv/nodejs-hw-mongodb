@@ -1,8 +1,15 @@
 tags:
   - Contacts
-summary: Get contact by id
+summary: Retrieve a Contact by ID
 operationId: getContact
-description: 'Get contact by id'
+description: |
+  **Retrieve a specific contact by its unique identifier.**
+
+  This endpoint allows you to fetch details of a contact using its `contactId`.
+
+  ### Security
+  - Requires a valid Bearer Token to be provided in the `Authorization` header.
+
 security:
   - bearerAuth: []
 parameters:
@@ -12,9 +19,17 @@ parameters:
     schema:
       type: string
       example: '66cb5f4d0318528063e77c98'
+    description: |
+      **The unique identifier of the contact.**
+
+      This `contactId` must be a valid string representing an existing contact.
+
 responses:
   '200':
-    description: 'Get contact by id'
+    description: |
+      **Contact Retrieved Successfully**
+
+      The contact details were successfully retrieved. The response contains the following structure:
     content:
       application/json:
         schema:
@@ -27,11 +42,18 @@ responses:
             status:
               type: integer
               example: 200
+              description: HTTP status code
             message:
               type: string
               example: Successfully found contact with id 66cb5f4d0318528063e77c98!
+              description: Human-readable message confirming the retrieval of the contact
             data:
               type: object
               $ref: '../../../components/schemas/contact.yaml'
+              description: The contact object containing all details
   '404':
     $ref: '../../../components/responses/404.yaml'
+    description: |
+      **Contact Not Found**
+
+      The provided `contactId` does not match any existing contact.
