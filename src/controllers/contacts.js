@@ -48,14 +48,16 @@ export const createContactController = async (req, res, next) => {
   const photo = req.file;
   let photoUrl;
 
-  try {
-    photoUrl = await saveFileToCloudinary(photo);
-  } catch (error) {
-    return next(
-      createHttpError.InternalServerError(
-        'Failed to save photo, please try again later.',
-      ),
-    );
+  if (photo !== undefined) {
+    try {
+      photoUrl = await saveFileToCloudinary(photo);
+    } catch (error) {
+      return next(
+        createHttpError.InternalServerError(
+          'Failed to save photo, please try again later.',
+        ),
+      );
+    }
   }
 
   const contact = await createContact({
@@ -65,7 +67,7 @@ export const createContactController = async (req, res, next) => {
     isFavorite: req.body.isFavorite,
     contactType: req.body.contactType,
     userId: req.user._id,
-    photo: photoUrl,
+    photo: photoUrl || '',
   });
 
   res.status(STATUS_CREATED).json({
@@ -81,14 +83,16 @@ export const upsertUserController = async (req, res, next) => {
   const photo = req.file;
   let photoUrl;
 
-  try {
-    photoUrl = await saveFileToCloudinary(photo);
-  } catch (error) {
-    return next(
-      createHttpError.InternalServerError(
-        'Failed to save photo, please try again later.',
-      ),
-    );
+  if (photo !== undefined) {
+    try {
+      photoUrl = await saveFileToCloudinary(photo);
+    } catch (error) {
+      return next(
+        createHttpError.InternalServerError(
+          'Failed to save photo, please try again later.',
+        ),
+      );
+    }
   }
 
   const result = await updateContact(contactId, userId, {

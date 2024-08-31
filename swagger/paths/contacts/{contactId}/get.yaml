@@ -51,9 +51,37 @@ responses:
               type: object
               $ref: '../../../components/schemas/contact.yaml'
               description: The contact object containing all details
+
+  '401':
+    $ref: ../../../components/responses/401.yaml
+
   '404':
-    $ref: '../../../components/responses/404.yaml'
     description: |
       **Contact Not Found**
 
       The provided `contactId` does not match any existing contact.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: 'NotFoundError'
+            data:
+              type: object
+              required:
+                - message
+                - errors
+              properties:
+                message:
+                  type: string
+                  example: 'Contact not found'

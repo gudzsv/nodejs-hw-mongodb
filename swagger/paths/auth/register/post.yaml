@@ -1,13 +1,33 @@
 tags:
   - Auth
-summary: User registration
+summary: User Registration
 operationId: registerUser
-description: 'Register a user'
-security:
-  - bearerAuth: []
+description: |
+  **User Registration**
+
+  This endpoint allows new users to register an account by providing essential information.
+
+  ### Required Fields
+  - **Name**: The full name of the user.
+  - **Email**: A valid email address that will be used for login and communication.
+  - **Password**: A secure password for the user's account.
+
+  ### Optional Fields
+  - There are no optional fields for this endpoint. All fields are required.
+
+  ### How to Use
+  - **Name**: Enter the user's full name.
+  - **Email**: Provide a unique email address for the user.
+  - **Password**: Choose a strong password for the user’s account.
+
+  After successful registration, the user will receive a confirmation response with details of the newly created account.
+
+  ### Security
+  - This endpoint does not require authentication. You can access this endpoint directly to register a new user.
+security: []
 requestBody:
   content:
-    application/json:
+    application/x-www-form-urlencoded:
       schema:
         type: object
         required:
@@ -16,20 +36,20 @@ requestBody:
           - password
         properties:
           name:
-            description: "User's name"
             type: string
+            description: "The user's full name."
             example: 'User One'
           email:
-            description: "User's email"
             type: string
+            description: "The user's email address."
             example: 'userone@example.com'
           password:
-            description: "User's password"
             type: string
+            description: "The user's password."
             example: '123Qwe!xX'
 
 responses:
   '201':
-    $ref: ../../../components/responses//201.yaml
-  '400':
-    $ref: ../../../components/responses/400.yaml
+    $ref: '../../../components/responses/201.yaml'
+  '409':
+    $ref: '../../../components/responses/409.yaml'

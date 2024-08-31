@@ -1,4 +1,10 @@
-description: Unauthorized error
+description: |
+  **Unauthorized**
+
+  Authentication is required or the provided token is invalid.
+
+  - **message**: Detailed message about the authorization issue.
+
 content:
   application/json:
     schema:
@@ -11,21 +17,33 @@ content:
         status:
           type: integer
           example: 401
+          description: 'HTTP status code indicating unauthorized access'
         message:
           type: string
           example: UnauthorizedError
+          description: 'Error message indicating authentication issues'
         data:
           type: object
           required:
             - message
-          oneOf:
-            - properties:
-                data:
-                  properties:
-                    message:
-                      example: 'User not authorized'
-            - properties:
-                data:
-                  properties:
-                    message:
-                      example: 'Access token expired'
+          properties:
+            message:
+              type: string
+              example: 'User not authorized'
+              description: 'Detailed message about the authorization issue'
+          additionalProperties: false
+    examples:
+      no_token:
+        summary: User not authorized
+        value:
+          status: 401
+          message: UnauthorizedError
+          data:
+            message: User not authorized
+      token_expired:
+        summary: Access token expired
+        value:
+          status: 401
+          message: UnauthorizedError
+          data:
+            message: Access token expired

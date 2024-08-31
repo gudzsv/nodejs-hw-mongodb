@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import pino from 'pino-http';
 import { env } from './utils/env.js';
@@ -21,6 +22,8 @@ export const setupServer = () => {
   app.use(cookieParser());
 
   app.use(pino(pinoConfigs));
+
+  app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use('/api-docs', swaggerDocs());
 

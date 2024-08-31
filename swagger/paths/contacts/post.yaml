@@ -56,7 +56,9 @@ requestBody:
           photo:
             type: string
             format: binary
-            description: "An optional file for the contact's photo. It should be in image format."
+            description: |
+              An optional file for the contact's photo. It should be in image format.
+              **If left empty, this field should not be included in the request.**
 
 responses:
   '201':
@@ -128,52 +130,10 @@ responses:
             - data
 
   '401':
-    description: Unauthorized - Authentication required or token invalid
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 401
-              description: HTTP status code
-            message:
-              type: string
-              example: UnauthorizedError
-              description: Error message indicating authentication issues
-            data:
-              type: object
-              required:
-                - message
-              properties:
-                message:
-                  type: string
-                  example: 'User not authorized'
-                  description: Detailed message about the authorization issue
-              additionalProperties: false
-        examples:
-          no_token:
-            summary: User not authorized
-            value:
-              status: 401
-              message: UnauthorizedError
-              data:
-                message: User not authorized
-          token_expired:
-            summary: Access token expired
-            value:
-              status: 401
-              message: UnauthorizedError
-              data:
-                message: Access token expired
+    $ref: ../../components/responses/401.yaml
 
-  '404':
-    description: Not Found - Session or Authorization header not found
+  '500':
+    description: InternalServerError
     content:
       application/json:
         schema:
@@ -185,12 +145,10 @@ responses:
           properties:
             status:
               type: integer
-              example: 404
-              description: HTTP status code
+              example: 500
             message:
               type: string
-              example: NotFoundError
-              description: Error message indicating that the resource was not found
+              example: 'InternalServerError'
             data:
               type: object
               required:
@@ -198,21 +156,4 @@ responses:
               properties:
                 message:
                   type: string
-                  example: 'Session not found'
-                  description: Detailed message about the missing session or header
-              additionalProperties: false
-        examples:
-          no_token:
-            summary: Session not found
-            value:
-              status: 404
-              message: NotFoundError
-              data:
-                message: Session not found
-          token_expired:
-            summary: Authorization header not found
-            value:
-              status: 404
-              message: NotFoundError
-              data:
-                message: Authorization header not found
+                  example: 'Failed to save photo, please try again later.'

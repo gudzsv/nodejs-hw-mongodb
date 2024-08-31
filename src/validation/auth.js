@@ -10,14 +10,10 @@ export const registerUserSchema = Joi.object({
     'string.max': MAX,
   }),
   email: Joi.string()
-    .min(MIN_LENGTH)
-    .max(MAX_LENGTH)
     .email({ tlds: { allow: false } })
     .required()
     .messages({
       'string.base': STRING,
-      'string.min': MIN,
-      'string.max': MAX,
       'string.email': EMAIL,
     }),
   password: Joi.string().min(MIN_LENGTH).max(MAX_LENGTH).required().messages({
@@ -29,14 +25,10 @@ export const registerUserSchema = Joi.object({
 
 export const loginUserSchema = Joi.object({
   email: Joi.string()
-    .min(MIN_LENGTH)
-    .max(MAX_LENGTH)
     .email({ tlds: { allow: false } })
     .required()
     .messages({
       'string.base': STRING,
-      'string.min': MIN,
-      'string.max': MAX,
       'string.email': EMAIL,
     }),
   password: Joi.string().min(MIN_LENGTH).max(MAX_LENGTH).required().messages({
@@ -47,14 +39,10 @@ export const loginUserSchema = Joi.object({
 
 export const sendResetEmailSchema = Joi.object({
   email: Joi.string()
-    .min(MIN_LENGTH)
-    .max(MAX_LENGTH)
     .email({ tlds: { allow: false } })
     .required()
     .messages({
       'string.base': STRING,
-      'string.min': MIN,
-      'string.max': MAX,
       'string.email': EMAIL,
     }),
 });

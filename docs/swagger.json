@@ -85,7 +85,7 @@
                   "photo": {
                     "type": "string",
                     "format": "binary",
-                    "description": "An optional file for the contact's photo. It should be in image format."
+                    "description": "An optional file for the contact's photo. It should be in image format.\n**If left empty, this field should not be included in the request.**\n"
                   }
                 }
               }
@@ -187,70 +187,10 @@
             }
           },
           "401": {
-            "description": "Unauthorized - Authentication required or token invalid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 401,
-                      "description": "HTTP status code"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "UnauthorizedError",
-                      "description": "Error message indicating authentication issues"
-                    },
-                    "data": {
-                      "type": "object",
-                      "required": [
-                        "message"
-                      ],
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "example": "User not authorized",
-                          "description": "Detailed message about the authorization issue"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  }
-                },
-                "examples": {
-                  "no_token": {
-                    "summary": "User not authorized",
-                    "value": {
-                      "status": 401,
-                      "message": "UnauthorizedError",
-                      "data": {
-                        "message": "User not authorized"
-                      }
-                    }
-                  },
-                  "token_expired": {
-                    "summary": "Access token expired",
-                    "value": {
-                      "status": 401,
-                      "message": "UnauthorizedError",
-                      "data": {
-                        "message": "Access token expired"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/401"
           },
-          "404": {
-            "description": "Not Found - Session or Authorization header not found",
+          "500": {
+            "description": "InternalServerError",
             "content": {
               "application/json": {
                 "schema": {
@@ -263,13 +203,11 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 404,
-                      "description": "HTTP status code"
+                      "example": 500
                     },
                     "message": {
                       "type": "string",
-                      "example": "NotFoundError",
-                      "description": "Error message indicating that the resource was not found"
+                      "example": "InternalServerError"
                     },
                     "data": {
                       "type": "object",
@@ -279,32 +217,8 @@
                       "properties": {
                         "message": {
                           "type": "string",
-                          "example": "Session not found",
-                          "description": "Detailed message about the missing session or header"
+                          "example": "Failed to save photo, please try again later."
                         }
-                      },
-                      "additionalProperties": false
-                    }
-                  }
-                },
-                "examples": {
-                  "no_token": {
-                    "summary": "Session not found",
-                    "value": {
-                      "status": 404,
-                      "message": "NotFoundError",
-                      "data": {
-                        "message": "Session not found"
-                      }
-                    }
-                  },
-                  "token_expired": {
-                    "summary": "Authorization header not found",
-                    "value": {
-                      "status": 404,
-                      "message": "NotFoundError",
-                      "data": {
-                        "message": "Authorization header not found"
                       }
                     }
                   }
@@ -524,118 +438,10 @@
             }
           },
           "401": {
-            "description": "Unauthorized - Authentication required or invalid token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 401
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "UnauthorizedError"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "example": "User not authorized"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  }
-                },
-                "examples": {
-                  "no_token": {
-                    "summary": "User not authorized",
-                    "value": {
-                      "status": 401,
-                      "message": "UnauthorizedError",
-                      "data": {
-                        "message": "User not authorized"
-                      }
-                    }
-                  },
-                  "token_expired": {
-                    "summary": "Access token expired",
-                    "value": {
-                      "status": 401,
-                      "message": "UnauthorizedError",
-                      "data": {
-                        "message": "Access token expired"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/401"
           },
           "404": {
-            "description": "Not Found - Session or Authorization header not found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 404
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "NotFoundError"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "example": "Session not found"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  }
-                },
-                "examples": {
-                  "no_token": {
-                    "summary": "Session not found",
-                    "value": {
-                      "status": 404,
-                      "message": "NotFoundError",
-                      "data": {
-                        "message": "Session not found"
-                      }
-                    }
-                  },
-                  "token_expired": {
-                    "summary": "Authorization header not found",
-                    "value": {
-                      "status": 404,
-                      "message": "NotFoundError",
-                      "data": {
-                        "message": "Authorization header not found"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/404"
           }
         }
       }
@@ -698,9 +504,46 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
           "404": {
-            "$ref": "#/components/responses/404",
-            "description": "**Contact Not Found**\n\nThe provided `contactId` does not match any existing contact.\n"
+            "description": "**Contact Not Found**\n\nThe provided `contactId` does not match any existing contact.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "NotFoundError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message",
+                        "errors"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Contact not found"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -827,6 +670,57 @@
               }
             }
           },
+          "201": {
+            "description": "**Contact Successfully Created**\n\nA new contact was created as part of the update process. The response includes details of the newly created contact.\n\n- **_id**: Unique identifier for the created contact.\n- **createdAt**: Timestamp when the contact was created.\n- **updatedAt**: Timestamp when the contact was last updated.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201,
+                      "description": "HTTP status code indicating successful creation"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created the contact!",
+                      "description": "Confirmation message indicating successful creation"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/contact"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "_id": {
+                              "type": "string",
+                              "example": "66cb5f4d0318528063e77c98",
+                              "description": "Unique identifier for the created contact"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2024-08-29T20:39:40.775Z",
+                              "description": "The date and time when the contact was created"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2024-08-29T20:39:40.775Z",
+                              "description": "The date and time when the contact was last updated"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "**Bad Request**\n\nThe request was invalid or contained errors. Ensure all provided fields are correct and valid.\n\n- **message**: Detailed error message.\n- **errors**: List of validation errors.\n",
             "content": {
@@ -854,7 +748,7 @@
                         },
                         "errors": {
                           "type": "string",
-                          "example": "'name' is a required field; 'phoneNumber' is a required field; 'contactType' is a required field",
+                          "example": "'name' should be more then 2 character ; 'phoneNumber' should be more then 2 character ; 'contactType' must be true or false",
                           "description": "List of validation errors"
                         }
                       }
@@ -870,70 +764,10 @@
             }
           },
           "401": {
-            "description": "**Unauthorized**\n\nAuthentication is required or the provided token is invalid.\n\n- **message**: Detailed message about the authorization issue.\n",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 401,
-                      "description": "HTTP status code indicating unauthorized access"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "UnauthorizedError",
-                      "description": "Error message indicating authentication issues"
-                    },
-                    "data": {
-                      "type": "object",
-                      "required": [
-                        "message"
-                      ],
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "example": "User not authorized",
-                          "description": "Detailed message about the authorization issue"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  }
-                },
-                "examples": {
-                  "no_token": {
-                    "summary": "User not authorized",
-                    "value": {
-                      "status": 401,
-                      "message": "UnauthorizedError",
-                      "data": {
-                        "message": "User not authorized"
-                      }
-                    }
-                  },
-                  "token_expired": {
-                    "summary": "Access token expired",
-                    "value": {
-                      "status": 401,
-                      "message": "UnauthorizedError",
-                      "data": {
-                        "message": "Access token expired"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/401"
           },
           "404": {
-            "description": "**Not Found**\n\nThe session or Authorization header was not found. Verify that the required session or header is included.\n\n- **message**: Detailed message about the missing session or header.\n",
+            "description": "**Contact Not Found**\n\nThe provided `contactId` does not match any existing contact.\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -946,48 +780,23 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 404,
-                      "description": "HTTP status code indicating that the resource was not found"
+                      "example": 404
                     },
                     "message": {
                       "type": "string",
-                      "example": "NotFoundError",
-                      "description": "Error message indicating that the resource was not found"
+                      "example": "NotFoundError"
                     },
                     "data": {
                       "type": "object",
                       "required": [
-                        "message"
+                        "message",
+                        "errors"
                       ],
                       "properties": {
                         "message": {
                           "type": "string",
-                          "example": "Session not found",
-                          "description": "Detailed message about the missing session or header"
+                          "example": "Contact not found"
                         }
-                      },
-                      "additionalProperties": false
-                    }
-                  }
-                },
-                "examples": {
-                  "no_token": {
-                    "summary": "Session not found",
-                    "value": {
-                      "status": 404,
-                      "message": "NotFoundError",
-                      "data": {
-                        "message": "Session not found"
-                      }
-                    }
-                  },
-                  "token_expired": {
-                    "summary": "Authorization header not found",
-                    "value": {
-                      "status": 404,
-                      "message": "NotFoundError",
-                      "data": {
-                        "message": "Authorization header not found"
                       }
                     }
                   }
@@ -1099,67 +908,7 @@
             }
           },
           "401": {
-            "description": "**Unauthorized**\n\nAuthentication is required or the provided token is invalid.\n\n- **message**: Detailed message about the authorization issue.\n",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 401,
-                      "description": "HTTP status code indicating unauthorized access"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "UnauthorizedError",
-                      "description": "Error message indicating authentication issues"
-                    },
-                    "data": {
-                      "type": "object",
-                      "required": [
-                        "message"
-                      ],
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "example": "User not authorized",
-                          "description": "Detailed message about the authorization issue"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  }
-                },
-                "examples": {
-                  "no_token": {
-                    "summary": "User not authorized",
-                    "value": {
-                      "status": 401,
-                      "message": "UnauthorizedError",
-                      "data": {
-                        "message": "User not authorized"
-                      }
-                    }
-                  },
-                  "token_expired": {
-                    "summary": "Access token expired",
-                    "value": {
-                      "status": 401,
-                      "message": "UnauthorizedError",
-                      "data": {
-                        "message": "Access token expired"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/401"
           },
           "404": {
             "description": "**Not Found**\n\nThe contact could not be found. Verify that the `contactId` provided is correct.\n\n- **message**: Detailed message about the missing contact.\n",
@@ -1200,9 +949,97 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User Registration",
+        "operationId": "registerUser",
+        "description": "**User Registration**\n\nThis endpoint allows new users to register an account by providing essential information.\n\n### Required Fields\n- **Name**: The full name of the user.\n- **Email**: A valid email address that will be used for login and communication.\n- **Password**: A secure password for the user's account.\n\n### Optional Fields\n- There are no optional fields for this endpoint. All fields are required.\n\n### How to Use\n- **Name**: Enter the user's full name.\n- **Email**: Provide a unique email address for the user.\n- **Password**: Choose a strong password for the user’s account.\n\nAfter successful registration, the user will receive a confirmation response with details of the newly created account.\n\n### Security\n- This endpoint does not require authentication. You can access this endpoint directly to register a new user.\n",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The user's full name.",
+                    "example": "User One"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "The user's email address.",
+                    "example": "userone@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The user's password.",
+                    "example": "123Qwe!xX"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/201"
           },
-          "500": {
-            "description": "**Internal Server Error**\n\nAn unexpected error occurred on the server side. Please try again later.\n\n- **message**: Detailed error message.\n",
+          "409": {
+            "$ref": "#/components/responses/409"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User Login",
+        "operationId": "loginUser",
+        "description": "**User Login**\n\nThis endpoint allows registered users to log in to their account by providing their email and password.\n\n### Required Fields\n- **Email**: The email address associated with the user's account.\n- **Password**: The password for the user's account.\n\n### How to Use\n- **Email**: Enter the email address used during registration.\n- **Password**: Provide the password associated with the email address.\n\nUpon successful login, the response will include an access token that can be used to authenticate further requests.\n\n### Security\n- This endpoint does not require authentication for accessing the login functionality.\n",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "The email address associated with the user's account.",
+                    "example": "userone@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The password for the user's account.",
+                    "example": "123Qwe!xX"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**Successfully Logged In**\n\nThe login was successful, and an access token has been provided. Use this token for subsequent authenticated requests.\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -1215,24 +1052,24 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 500,
-                      "description": "HTTP status code indicating an internal server error"
+                      "example": 200,
+                      "description": "HTTP status code indicating a successful login"
                     },
                     "message": {
                       "type": "string",
-                      "example": "InternalServerError",
-                      "description": "Error message indicating an internal server issue"
+                      "example": "Successfully logged in!",
+                      "description": "Confirmation message indicating successful login"
                     },
                     "data": {
                       "type": "object",
                       "required": [
-                        "message"
+                        "accessToken"
                       ],
                       "properties": {
-                        "message": {
+                        "accessToken": {
                           "type": "string",
-                          "example": "Failed to delete contact, please try again later.",
-                          "description": "Detailed error message"
+                          "example": "rq+GxElZ5o1qmL42xcxm+77ijgXajMg34lLc23My",
+                          "description": "The access token to be used for authenticated requests"
                         }
                       }
                     }
@@ -1244,101 +1081,18 @@
         }
       }
     },
-    "/auth/register": {
+    "/auth/refresh": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "summary": "User registration",
-        "operationId": "registerUser",
-        "description": "Register a user",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "name",
-                  "email",
-                  "password"
-                ],
-                "properties": {
-                  "name": {
-                    "description": "User's name",
-                    "type": "string",
-                    "example": "User One"
-                  },
-                  "email": {
-                    "description": "User's email",
-                    "type": "string",
-                    "example": "userone@example.com"
-                  },
-                  "password": {
-                    "description": "User's password",
-                    "type": "string",
-                    "example": "123Qwe!xX"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "$ref": "#/components/responses/201"
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          }
-        }
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "User login in",
-        "operationId": "loginUser",
-        "description": "Login a user",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "email",
-                  "password"
-                ],
-                "properties": {
-                  "email": {
-                    "description": "User's email",
-                    "type": "string",
-                    "example": "userone@example.com"
-                  },
-                  "password": {
-                    "description": "User's password",
-                    "type": "string",
-                    "example": "123Qwe!xX"
-                  }
-                }
-              }
-            }
-          }
-        },
+        "summary": "Refresh session accessToken",
+        "operationId": "refresh",
+        "description": "Refresh session accessToken",
+        "security": [],
         "responses": {
           "200": {
-            "description": "Successfully logged in an user!",
+            "description": "Successfully refreshed a session!",
             "content": {
               "application/json": {
                 "schema": {
@@ -1355,7 +1109,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully logged in an user!"
+                      "example": "Successfully refreshed a session!"
                     },
                     "data": {
                       "type": "object",
@@ -1376,6 +1130,29 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User login out",
+        "operationId": "logoutUser",
+        "description": "Log out a user",
+        "security": [],
+        "responses": {
+          "204": {
+            "description": "**No Content**\n\nThe contact was successfully log out. There is no content in the response body, only the status code 204 indicating a successful log out.\n",
+            "content": {}
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       }
@@ -1500,8 +1277,8 @@
           }
         }
       },
-      "400": {
-        "description": "Bad Request error",
+      "401": {
+        "description": "**Unauthorized**\n\nAuthentication is required or the provided token is invalid.\n\n- **message**: Detailed message about the authorization issue.\n",
         "content": {
           "application/json": {
             "schema": {
@@ -1514,11 +1291,139 @@
               "properties": {
                 "status": {
                   "type": "integer",
-                  "example": 400
+                  "example": 401,
+                  "description": "HTTP status code indicating unauthorized access"
                 },
                 "message": {
                   "type": "string",
-                  "example": "BadRequestError"
+                  "example": "UnauthorizedError",
+                  "description": "Error message indicating authentication issues"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not authorized",
+                      "description": "Detailed message about the authorization issue"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "examples": {
+              "no_token": {
+                "summary": "User not authorized",
+                "value": {
+                  "status": 401,
+                  "message": "UnauthorizedError",
+                  "data": {
+                    "message": "User not authorized"
+                  }
+                }
+              },
+              "token_expired": {
+                "summary": "Access token expired",
+                "value": {
+                  "status": 401,
+                  "message": "UnauthorizedError",
+                  "data": {
+                    "message": "Access token expired"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found - Session or Authorization header not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404,
+                  "description": "HTTP status code"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "NotFoundError",
+                  "description": "Error message indicating that the resource was not found"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Session not found",
+                      "description": "Detailed message about the missing session or header"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "examples": {
+              "no_token": {
+                "summary": "Session not found",
+                "value": {
+                  "status": 404,
+                  "message": "NotFoundError",
+                  "data": {
+                    "message": "Session not found"
+                  }
+                }
+              },
+              "token_expired": {
+                "summary": "Authorization header not found",
+                "value": {
+                  "status": 404,
+                  "message": "NotFoundError",
+                  "data": {
+                    "message": "Authorization header not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "**Conflict Error (409)**\n\nThis error occurs when there is a conflict with the current state of the resource.\n- In this case, the conflict arises because the `email` provided is already in use by another account.\n",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "description": "HTTP status code indicating the error type.",
+                  "example": 409
+                },
+                "message": {
+                  "type": "string",
+                  "description": "A brief summary of the conflict error.",
+                  "example": "ConflictError"
                 },
                 "data": {
                   "type": "object",
@@ -1529,103 +1434,8 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Bad request, body parameters are incorrect"
-                    },
-                    "errors": {
-                      "type": "string",
-                      "example": "name is required"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 401
-                },
-                "message": {
-                  "type": "string",
-                  "example": "UnauthorizedError"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "message"
-                  ],
-                  "oneOf": [
-                    {
-                      "properties": {
-                        "data": {
-                          "properties": {
-                            "message": {
-                              "example": "User not authorized"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "properties": {
-                            "message": {
-                              "example": "Access token expired"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "NotFound error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 404
-                },
-                "message": {
-                  "type": "string",
-                  "example": "NotFoundError"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "message"
-                  ],
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Entity not found"
+                      "description": "Specific details about the error, such as the conflicting field.",
+                      "example": "Email already in use"
                     }
                   }
                 }

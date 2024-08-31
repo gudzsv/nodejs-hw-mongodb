@@ -25,4 +25,4 @@ content:
               example: 'Bad request, body parameters are incorrect'
             errors:
               type: string
-              example: 'name is required'
+              example: 'Field is required'
