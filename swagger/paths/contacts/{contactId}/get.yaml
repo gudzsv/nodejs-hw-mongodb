@@ -1,0 +1,87 @@
+tags:
+  - Contacts
+summary: Retrieve a Contact by ID
+operationId: getContact
+description: |
+  **Retrieve a specific contact by its unique identifier.**
+
+  This endpoint allows you to fetch details of a contact using its `contactId`.
+
+  ### Security
+  - Requires a valid Bearer Token to be provided in the `Authorization` header.
+
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: contactId
+    required: true
+    schema:
+      type: string
+      example: '66cb5f4d0318528063e77c98'
+    description: |
+      **The unique identifier of the contact.**
+
+      This `contactId` must be a valid string representing an existing contact.
+
+responses:
+  '200':
+    description: |
+      **Contact Retrieved Successfully**
+
+      The contact details were successfully retrieved. The response contains the following structure:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+              description: HTTP status code
+            message:
+              type: string
+              example: Successfully found contact with id 66cb5f4d0318528063e77c98!
+              description: Human-readable message confirming the retrieval of the contact
+            data:
+              type: object
+              $ref: '../../../components/schemas/contact.yaml'
+              description: The contact object containing all details
+
+  '401':
+    $ref: ../../../components/responses/401.yaml
+
+  '404':
+    description: |
+      **Contact Not Found**
+
+      The provided `contactId` does not match any existing contact.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: 'NotFoundError'
+            data:
+              type: object
+              required:
+                - message
+                - errors
+              properties:
+                message:
+                  type: string
+                  example: 'Contact not found'

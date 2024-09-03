@@ -1,0 +1,262 @@
+tags:
+  - Contacts
+summary: Update an Existing Contact
+operationId: updateContact
+description: |
+  **Update an Existing Contact**
+
+  This endpoint allows you to partially update an existing contact. You can modify any of the fields except for system fields and `userId`.
+
+  ### Fields that Can Be Updated
+  - **Name**: The contact's full name.
+  - **Phone Number**: The contact's phone number, including country code if necessary.
+  - **Email**: The contact's email address (optional).
+  - **Is Favorite**: A boolean flag indicating whether the contact is marked as a favorite.
+  - **Contact Type**: The type of the contact. Options include `work`, `home`, and `personal`.
+  - **Photo**: An optional file for the contact's photo. This should be an image file.
+
+  ### Fields that Cannot Be Updated
+  - **System Fields**:
+    - **_id**: Unique identifier for the contact, automatically generated.
+    - **createdAt**: Timestamp when the contact was created, managed by the system.
+    - **updatedAt**: Timestamp when the contact was last updated, managed by the system.
+  - **userId**: The ID of the user associated with the contact, which is extracted from the Bearer Token and cannot be updated.
+
+  ### Security
+  - **Authentication Required**: This endpoint requires authentication. Include a valid Bearer Token in the `Authorization` header to identify the `userId` associated with the contact.
+
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: contactId
+    required: true
+    schema:
+      type: string
+    description: 'The unique identifier of the contact to be updated.'
+    example: '66cb5f4d0318528063e77c98'
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            description: 'The full name of the contact.'
+            example: 'Nik Brook'
+          phoneNumber:
+            type: string
+            description: "The contact's phone number, including country code if necessary."
+            example: '+38000000899'
+          email:
+            type: string
+            description: "The contact's email address. This is optional."
+            example: 'nik@example.com'
+          isFavorite:
+            type: boolean
+            description: 'Indicates whether the contact is marked as a favorite.'
+            example: false
+          contactType:
+            type: string
+            description: 'The type of the contact. It can be `work`, `home`, or `personal`.'
+            enum: ['work', 'home', 'personal']
+            example: 'personal'
+          photo:
+            type: string
+            format: binary
+            description: "An optional file for the contact's photo. It should be in image format."
+        additionalProperties: false
+responses:
+  '200':
+    description: |
+      **Contact Successfully Updated**
+
+      The contact was updated successfully. The response includes details of the updated contact.
+
+      - **_id**: Unique identifier for the updated contact.
+      - **createdAt**: Timestamp when the contact was created.
+      - **updatedAt**: Timestamp when the contact was last updated.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+              description: 'HTTP status code indicating successful update'
+            message:
+              type: string
+              example: Successfully updated the contact!
+              description: 'Confirmation message indicating successful update'
+            data:
+              allOf:
+                - $ref: '../../../components/schemas/contact.yaml'
+                - type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: 66cb5f4d0318528063e77c98
+                      description: 'Unique identifier for the updated contact'
+                    createdAt:
+                      type: string
+                      format: date-time
+                      example: '2024-08-29T20:39:40.775Z'
+                      description: 'The date and time when the contact was created'
+                    updatedAt:
+                      type: string
+                      format: date-time
+                      example: '2024-08-29T20:39:40.775Z'
+                      description: 'The date and time when the contact was last updated'
+
+  '201':
+    description: |
+      **Contact Successfully Created**
+
+      A new contact was created as part of the update process. The response includes details of the newly created contact.
+
+      - **_id**: Unique identifier for the created contact.
+      - **createdAt**: Timestamp when the contact was created.
+      - **updatedAt**: Timestamp when the contact was last updated.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+              description: 'HTTP status code indicating successful creation'
+            message:
+              type: string
+              example: Successfully created the contact!
+              description: 'Confirmation message indicating successful creation'
+            data:
+              allOf:
+                - $ref: '../../../components/schemas/contact.yaml'
+                - type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: 66cb5f4d0318528063e77c98
+                      description: 'Unique identifier for the created contact'
+                    createdAt:
+                      type: string
+                      format: date-time
+                      example: '2024-08-29T20:39:40.775Z'
+                      description: 'The date and time when the contact was created'
+                    updatedAt:
+                      type: string
+                      format: date-time
+                      example: '2024-08-29T20:39:40.775Z'
+                      description: 'The date and time when the contact was last updated'
+
+  '400':
+    description: |
+      **Bad Request**
+
+      The request was invalid or contained errors. Ensure all provided fields are correct and valid.
+
+      - **message**: Detailed error message.
+      - **errors**: List of validation errors.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+              description: 'HTTP status code indicating a bad request'
+            message:
+              type: string
+              example: BadRequestError
+              description: 'Error message indicating the nature of the bad request'
+            data:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'Bad request, body parameters are incorrect'
+                  description: 'Detailed error message'
+                errors:
+                  type: string
+                  example: "'name' should be more then 2 character ; 'phoneNumber' should be more then 2 character ; 'contactType' must be true or false"
+                  description: 'List of validation errors'
+          required:
+            - status
+            - message
+            - data
+
+  '401':
+    $ref: ../../../components/responses/401.yaml
+
+  '404':
+    description: |
+      **Contact Not Found**
+
+      The provided `contactId` does not match any existing contact.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: 'NotFoundError'
+            data:
+              type: object
+              required:
+                - message
+                - errors
+              properties:
+                message:
+                  type: string
+                  example: 'Contact not found'
+
+  '500':
+    description: |
+      **Internal Server Error**
+
+      An unexpected error occurred on the server side. Please try again later.
+
+      - **message**: Detailed error message.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 500
+              description: 'HTTP status code indicating an internal server error'
+            message:
+              type: string
+              example: InternalServerError
+              description: 'Error message indicating an internal server issue'
+            data:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  example: 'Failed to save photo, please try again later.'
+                  description: 'Detailed error message'

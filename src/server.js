@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import pino from 'pino-http';
 import { env } from './utils/env.js';
@@ -9,17 +10,22 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const PORT = Number(env(ENV_VARS.APP_PORT, 3000));
 
 export const setupServer = () => {
   const app = express();
 
-  app.use(cors(corsConfigs));
+  app.use(cors());
 
   app.use(cookieParser());
 
   app.use(pino(pinoConfigs));
+
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.use('/api-docs', swaggerDocs());
 
   app.use(router);
 

@@ -1,0 +1,101 @@
+tags:
+  - Contacts
+summary: Delete an Existing Contact
+operationId: deleteContact
+description: |
+  **Delete an Existing Contact**
+
+  This endpoint allows you to delete an existing contact from your list. Once deleted, the contact cannot be recovered.
+
+  ### Security
+  - **Authentication Required**: This endpoint requires authentication. Include a valid Bearer Token in the `Authorization` header to identify the `userId` associated with the contact.
+
+  ### Parameters
+  - **contactId**: The unique identifier of the contact you wish to delete. This must be provided in the path.
+
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: contactId
+    required: true
+    schema:
+      type: string
+    description: 'The unique identifier of the contact to be deleted.'
+    example: '66cb5f4d0318528063e77c98'
+
+responses:
+  '204':
+    description: |
+      **No Content**
+
+      The contact was successfully deleted. There is no content in the response body, only the status code 204 indicating a successful deletion.
+
+    content: {}
+
+  '400':
+    description: |
+      **Bad Request**
+
+      The request was invalid or contained errors. Ensure that the `contactId` provided is correct.
+
+      - **message**: Detailed error message.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+              description: 'HTTP status code indicating a bad request'
+            message:
+              type: string
+              example: BadRequestError
+              description: 'Error message indicating the nature of the bad request'
+            data:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'Invalid contactId provided'
+                  description: 'Detailed error message'
+
+  '401':
+    $ref: ../../../components/responses/401.yaml
+
+  '404':
+    description: |
+      **Not Found**
+
+      The contact could not be found. Verify that the `contactId` provided is correct.
+
+      - **message**: Detailed message about the missing contact.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+              description: 'HTTP status code indicating that the resource was not found'
+            message:
+              type: string
+              example: NotFoundError
+              description: 'Error message indicating that the contact was not found'
+            data:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  example: 'Contact not found'
+                  description: 'Detailed message about the missing contact'

@@ -1,0 +1,187 @@
+tags:
+  - Contacts
+summary: Retrieve a List of Contacts
+operationId: getContacts
+description: |
+  **Retrieve a list of contacts** with advanced filtering, sorting, and pagination options.
+
+  This endpoint allows you to:
+  - **Filter** contacts by various attributes such as name, phone number, email, and more.
+  - **Sort** contacts based on any field in either ascending or descending order.
+  - **Paginate** results to efficiently manage large datasets.
+
+  ### Security
+  - Requires a valid Bearer Token to be provided in the `Authorization` header.
+
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: page
+    schema:
+      type: integer
+    example: 1
+    description: |
+      **Page Number**
+      The page number to retrieve. Defaults to `1` if not specified.
+
+  - in: query
+    name: perPage
+    schema:
+      type: integer
+    example: 10
+    description: |
+      **Contacts per Page**
+      The number of contacts to display per page. Defaults to `10` if not specified.
+
+  - in: query
+    name: sortBy
+    schema:
+      type: string
+    example: 'createdAt'
+    description: |
+      **Sorting Field**
+      The field by which to sort the contacts. Any contact field can be used.
+      Defaults to `_id` if not specified.
+
+  - in: query
+    name: sortOrder
+    schema:
+      type: string
+      enum: ['asc', 'desc']
+    example: 'asc'
+    description: |
+      **Sorting Order**
+      The order to sort by, either ascending (`asc`) or descending (`desc`).
+
+  # - in: query
+  #   name: name
+  #   schema:
+  #     type: string
+  #   example: 'Nik Brook'
+  #   description: |
+  #     **Filter by Name**
+  #     Filter contacts whose names match the specified value.
+
+  # - in: query
+  #   name: phoneNumber
+  #   schema:
+  #     type: string
+  #   example: '+38000000899'
+  #   description: |
+  #     **Filter by Phone Number**
+  #     Filter contacts based on the provided phone number.
+
+  # - in: query
+  #   name: email
+  #   schema:
+  #     type: string
+  #   example: 'nik@example.com'
+  #   description: |
+  #     **Filter by Email Address**
+  #     Filter contacts based on the provided email address.
+
+  - in: query
+    name: isFavorite
+    schema:
+      type: boolean
+    example: true
+    description: |
+      **Filter by Favorite Status**
+      Filter contacts that are marked as favorites (`true`) or not (`false`).
+
+  - in: query
+    name: contactType
+    schema:
+      type: string
+      enum: ['work', 'home', 'personal']
+    example: personal
+    description: |
+      **Filter by Contact Type**
+      Filter contacts by type (e.g., `work`, `home`, `personal`). Defaults to `personal` if not specified.
+
+responses:
+  '200':
+    description: |
+      **Contacts Retrieved Successfully**
+      The contact list was successfully retrieved. The response includes details of the contacts, pagination information, and other relevant metadata.
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+              description: HTTP status code
+            message:
+              type: string
+              example: Successfully retrieved contacts!
+              description: Confirmation message indicating successful retrieval
+            data:
+              type: object
+              required:
+                - data
+                - page
+                - perPage
+                - totalItems
+                - totalPages
+                - hasNextPage
+                - hasPreviousPage
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    allOf:
+                      - $ref: '../../components/schemas/contact.yaml'
+                      - type: object
+                        properties:
+                          _id:
+                            type: string
+                            example: 66cb5f4d0318528063e77c98
+                            description: Unique identifier for the contact
+                          createdAt:
+                            type: string
+                            format: date-time
+                            example: '2024-08-29T20:39:40.775Z'
+                            description: The date and time when the contact was created
+                          updatedAt:
+                            type: string
+                            format: date-time
+                            example: '2024-08-29T20:39:40.775Z'
+                            description: The date and time when the contact was last updated
+                page:
+                  type: integer
+                  example: 1
+                  description: Current page number
+                perPage:
+                  type: integer
+                  example: 10
+                  description: Number of contacts per page
+                totalItems:
+                  type: integer
+                  example: 4
+                  description: Total number of contacts matching the query
+                totalPages:
+                  type: integer
+                  example: 1
+                  description: Total number of pages available
+                hasNextPage:
+                  type: boolean
+                  example: false
+                  description: Whether there are more pages available after the current page
+                hasPreviousPage:
+                  type: boolean
+                  example: false
+                  description: Whether there are pages available before the current page
+
+  '401':
+    $ref: ../../components/responses/401.yaml
+
+  '404':
+    $ref: ../../components/responses/404.yaml

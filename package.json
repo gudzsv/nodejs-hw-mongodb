@@ -6,11 +6,15 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "build": "npm run build-docs",
+    "build-docs": "redocly bundle --ext json -o docs/swagger.json",
+    "preview-docs": "redocly preview-docs"
   },
   "author": "Serhii Hudzenko <gudzsvmail@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@redocly/cli": "^1.21.1",
     "nodemon": "^3.1.4"
   },
   "dependencies": {
@@ -28,6 +32,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.14",
     "pino-http": "^10.2.0",
-    "pino-pretty": "^11.2.1"
+    "pino-pretty": "^11.2.1",
+    "swagger-ui-express": "^5.0.1"
   }
 }

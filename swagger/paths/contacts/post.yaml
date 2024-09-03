@@ -1,0 +1,159 @@
+tags:
+  - Contacts
+summary: Create a New Contact
+operationId: createContact
+description: |
+  **Create a new contact** with detailed information using this endpoint.
+
+  ### Required Fields
+  - **Name**: The full name of the contact.
+  - **Phone Number**: The contact's phone number, including country code if necessary.
+  - **Contact Type**: The type of contact (e.g., work, home, personal).
+
+  ### Optional Fields
+  - **Email**: The contact's email address (optional).
+  - **Is Favorite**: A boolean flag indicating whether the contact is marked as a favorite (optional).
+  - **Photo**: An optional image file for the contact's photo.
+
+  Ensure that all required fields are provided to successfully create a contact. You may also include additional optional details to enrich the contact's information.
+
+  ### Security
+  - This endpoint requires authentication via a Bearer Token. Include a valid token in the `Authorization` header.
+
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - name
+          - phoneNumber
+          - contactType
+        properties:
+          name:
+            type: string
+            description: 'The full name of the contact.'
+            example: 'Nik Brook'
+          phoneNumber:
+            type: string
+            description: "The contact's phone number, including country code if necessary."
+            example: '+38000000899'
+          email:
+            type: string
+            description: "The contact's email address. This is optional."
+            example: 'nik@example.com'
+          isFavorite:
+            type: boolean
+            description: 'Indicates whether the contact is marked as a favorite.'
+            example: false
+          contactType:
+            type: string
+            description: "The type of the contact. It can be 'work', 'home', or 'personal'."
+            enum: ['work', 'home', 'personal']
+            example: 'personal'
+          photo:
+            type: string
+            format: binary
+            description: |
+              An optional file for the contact's photo. It should be in image format.
+              **If left empty, this field should not be included in the request.**
+
+responses:
+  '201':
+    description: |
+      **Contact Successfully Created**
+      The contact was created successfully. The response contains details of the newly created contact.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+              description: HTTP status code
+            message:
+              type: string
+              example: Successfully created a contact!
+              description: Confirmation message indicating successful creation
+            data:
+              allOf:
+                - $ref: '../../components/schemas/contact.yaml'
+                - type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: 66cb5f4d0318528063e77c98
+                      description: Unique identifier for the created contact
+                    createdAt:
+                      type: string
+                      format: date-time
+                      example: '2024-08-29T20:39:40.775Z'
+                      description: The date and time when the contact was created
+                    updatedAt:
+                      type: string
+                      format: date-time
+                      example: '2024-08-29T20:39:40.775Z'
+                      description: The date and time when the contact was last updated
+
+  '400':
+    description: Bad Request - Invalid or missing required fields
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+              description: HTTP status code
+            message:
+              type: string
+              example: BadRequestError
+              description: Error message indicating the nature of the bad request
+            data:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'Bad request, body parameters are incorrect'
+                  description: Detailed error message
+                errors:
+                  type: string
+                  example: "'name' is a required field; 'phoneNumber' is a required field; 'contactType' is a required field"
+                  description: List of validation errors
+          required:
+            - status
+            - message
+            - data
+
+  '401':
+    $ref: ../../components/responses/401.yaml
+
+  '500':
+    description: InternalServerError
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 500
+            message:
+              type: string
+              example: 'InternalServerError'
+            data:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  example: 'Failed to save photo, please try again later.'

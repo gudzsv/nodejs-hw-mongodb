@@ -1,0 +1,18 @@
+tags:
+  - Auth
+summary: User login out
+operationId: logoutUser
+description: 'Log out a user'
+security: []
+
+responses:
+  '204':
+    description: |
+      **No Content**
+
+      The contact was successfully log out. There is no content in the response body, only the status code 204 indicating a successful log out.
+
+    content: {}
+
+  '404':
+    $ref: ../../../components/responses/404.yaml
