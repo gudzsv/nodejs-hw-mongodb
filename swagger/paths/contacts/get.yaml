@@ -54,32 +54,32 @@ parameters:
       **Sorting Order**
       The order to sort by, either ascending (`asc`) or descending (`desc`).
 
-  - in: query
-    name: name
-    schema:
-      type: string
-    example: 'Nik Brook'
-    description: |
-      **Filter by Name**
-      Filter contacts whose names match the specified value.
+  # - in: query
+  #   name: name
+  #   schema:
+  #     type: string
+  #   example: 'Nik Brook'
+  #   description: |
+  #     **Filter by Name**
+  #     Filter contacts whose names match the specified value.
 
-  - in: query
-    name: phoneNumber
-    schema:
-      type: string
-    example: '+38000000899'
-    description: |
-      **Filter by Phone Number**
-      Filter contacts based on the provided phone number.
+  # - in: query
+  #   name: phoneNumber
+  #   schema:
+  #     type: string
+  #   example: '+38000000899'
+  #   description: |
+  #     **Filter by Phone Number**
+  #     Filter contacts based on the provided phone number.
 
-  - in: query
-    name: email
-    schema:
-      type: string
-    example: 'nik@example.com'
-    description: |
-      **Filter by Email Address**
-      Filter contacts based on the provided email address.
+  # - in: query
+  #   name: email
+  #   schema:
+  #     type: string
+  #   example: 'nik@example.com'
+  #   description: |
+  #     **Filter by Email Address**
+  #     Filter contacts based on the provided email address.
 
   - in: query
     name: isFavorite

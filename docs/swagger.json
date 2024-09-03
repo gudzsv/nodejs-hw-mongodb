@@ -285,33 +285,6 @@
           },
           {
             "in": "query",
-            "name": "name",
-            "schema": {
-              "type": "string"
-            },
-            "example": "Nik Brook",
-            "description": "**Filter by Name**\nFilter contacts whose names match the specified value.\n"
-          },
-          {
-            "in": "query",
-            "name": "phoneNumber",
-            "schema": {
-              "type": "string"
-            },
-            "example": "+38000000899",
-            "description": "**Filter by Phone Number**\nFilter contacts based on the provided phone number.\n"
-          },
-          {
-            "in": "query",
-            "name": "email",
-            "schema": {
-              "type": "string"
-            },
-            "example": "nik@example.com",
-            "description": "**Filter by Email Address**\nFilter contacts based on the provided email address.\n"
-          },
-          {
-            "in": "query",
             "name": "isFavorite",
             "schema": {
               "type": "boolean"
